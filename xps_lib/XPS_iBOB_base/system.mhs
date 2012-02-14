@@ -202,7 +202,7 @@ BEGIN plb_bram_if_cntlr
  PARAMETER INSTANCE = plb_bram_if_cntlr_1
  PARAMETER HW_VER = 1.00.b
  PARAMETER c_plb_clk_period_ps = 10000
- PARAMETER c_baseaddr = 0xffff0000
+ PARAMETER c_baseaddr = 0xfffe0000
  PARAMETER c_highaddr = 0xffffffff
  BUS_INTERFACE PORTA = plb_bram
  BUS_INTERFACE SPLB = plb
