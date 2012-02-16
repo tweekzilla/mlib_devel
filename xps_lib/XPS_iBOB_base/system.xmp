@@ -87,7 +87,7 @@ Header: drivers/core_util.h
 DefaultInit: EXECUTABLE
 InitBram: 1
 Active: 1
-CompilerOptLevel: 2#IF#strcmp(get(b,'type'),'xps_lwip')#CompilerOptLevel: 4
+CompilerOptLevel: 2
 GlobPtrOpt: 0
 DebugSym: 0
 ProfileFlag: 0
@@ -98,6 +98,6 @@ StackSize:
 HeapSize:
 LinkerScript: Software/LinkerScript#IF#strcmp(get(b,'type'),'xps_lwip')#LinkerScript: Software/LinkerScript.lwip
 #IF# strcmp(get(b,'type'),'xps_xsg') && strcmp(get(b,'ibob_linux'),'on') #ProgCCFlags: -DLINUX_ENABLE
-#IF# strcmp(get(b,'type'),'xps_lwip') #ProgCCFlags: -DLWIP_ENABLE
+#IF# strcmp(get(b,'type'),'xps_lwip') #ProgCCFlags: -DLWIP_ENABLE -fno-reorder-blocks
 CompileInXps: 1
 NonXpsApp: 0
