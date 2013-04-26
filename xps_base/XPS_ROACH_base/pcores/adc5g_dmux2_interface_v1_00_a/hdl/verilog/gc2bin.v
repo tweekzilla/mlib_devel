@@ -3,7 +3,7 @@ module gc2bin(gc,
 	      );
 
    // Top level block parameters
-   parameter DATA_WIDTH = 8; // size of the gray code data
+   parameter DATA_WIDTH = 4; // size of the gray code data
 
    // Input
    input wire [DATA_WIDTH-1:0] gc;
