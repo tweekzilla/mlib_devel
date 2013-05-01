@@ -148,7 +148,9 @@ architecture behavioral of adc5g_dmux2_interface is
   signal data0b_prebuf1 : std_logic_vector(adc_bit_width-1 downto 0);
   signal data0a_prebuf2 : std_logic_vector(adc_bit_width-1 downto 0);
   signal data0b_prebuf2 : std_logic_vector(adc_bit_width-1 downto 0);
- 
+
+  constant test_signal    : std_logic_vector(adc_bit_width-1 downto 0) := "1101";
+  
   -- second core, "B"  
   signal data1          : std_logic_vector(adc_bit_width-1 downto 0);
   signal data1a         : std_logic_vector(adc_bit_width-1 downto 0);
@@ -161,7 +163,7 @@ architecture behavioral of adc5g_dmux2_interface is
   signal data1b_prebuf1 : std_logic_vector(adc_bit_width-1 downto 0);
   signal data1a_prebuf2 : std_logic_vector(adc_bit_width-1 downto 0);
   signal data1b_prebuf2 : std_logic_vector(adc_bit_width-1 downto 0);
- 
+  
   -- third core, "C"   
   signal data2          : std_logic_vector(adc_bit_width-1 downto 0);
   signal data2a         : std_logic_vector(adc_bit_width-1 downto 0);
@@ -174,7 +176,7 @@ architecture behavioral of adc5g_dmux2_interface is
   signal data2b_prebuf1 : std_logic_vector(adc_bit_width-1 downto 0);
   signal data2a_prebuf2 : std_logic_vector(adc_bit_width-1 downto 0);
   signal data2b_prebuf2 : std_logic_vector(adc_bit_width-1 downto 0);
- 
+  
   -- fourth core, "D"  
   signal data3          : std_logic_vector(adc_bit_width-1 downto 0);
   signal data3a         : std_logic_vector(adc_bit_width-1 downto 0);
@@ -187,7 +189,7 @@ architecture behavioral of adc5g_dmux2_interface is
   signal data3b_prebuf1 : std_logic_vector(adc_bit_width-1 downto 0);
   signal data3a_prebuf2 : std_logic_vector(adc_bit_width-1 downto 0);
   signal data3b_prebuf2 : std_logic_vector(adc_bit_width-1 downto 0);
- 
+  
   -- Gray code to binary converter
   component gc2bin
     generic (
@@ -324,41 +326,41 @@ begin
   ctrl_dcm_locked <= dcm_locked;
   sync            <= adc_sync;
 
-  ctrl_clk_out <= iddr_clkdiv;
-
+  ctrl_clk_out <= iddr_clk90_out;
+  
   IBUFDS0 : for i in adc_bit_width-1 downto 0 generate
     IBUFI0 : IBUFDS_LVDS_25
       port map (i    => adc_data0_p_i(i),
-                  ib => adc_data0_n_i(i),
-                  o  => data0(i)
-                  );
+                ib => adc_data0_n_i(i),
+                o  => data0(i)
+                );
   end generate IBUFDS0;
 
 
   IBUFDS1 : for i in adc_bit_width-1 downto 0 generate
     IBUFI1 : IBUFDS_LVDS_25
       port map (i    => adc_data1_p_i(i),
-                  ib => adc_data1_n_i(i),
-                  o  => data1(i)
-                  );
+                ib => adc_data1_n_i(i),
+                o  => data1(i)
+                );
   end generate IBUFDS1;
 
 
   IBUFDS2 : for i in adc_bit_width-1 downto 0 generate
     IBUFI2 : IBUFDS_LVDS_25
       port map (i    => adc_data2_p_i(i),
-                  ib => adc_data2_n_i(i),
-                  o  => data2(i)
-                  );
+                ib => adc_data2_n_i(i),
+                o  => data2(i)
+                );
   end generate IBUFDS2;
 
 
   IBUFDS3 : for i in adc_bit_width-1 downto 0 generate
     IBUF3 : IBUFDS_LVDS_25
       port map (i    => adc_data3_p_i(i),
-                  ib => adc_data3_n_i(i),
-                  o  => data3(i)
-                  );
+                ib => adc_data3_n_i(i),
+                o  => data3(i)
+                );
   end generate IBUFDS3;
 
 
@@ -544,6 +546,7 @@ begin
 
   fifo_wr_clk <= iddr_clkdiv;
   fifo_rd_clk <= ctrl_clk_in;
+  --fifo_rd_clk <= iddr_clkdiv;
   data0b      <= fifo_dout(adc_bit_width*8-1 downto adc_bit_width*7);
   data0a      <= fifo_dout(adc_bit_width*7-1 downto adc_bit_width*6);
   data1b      <= fifo_dout(adc_bit_width*6-1 downto adc_bit_width*5);
@@ -554,9 +557,9 @@ begin
   data3a      <= fifo_dout(adc_bit_width-1 downto 0);
 
 
-
+  --user_data_i0 <= test_signal;
   -- !!!Note channel ordering here may well be wrong!!!!
-chan1_mode : if (mode = 0) generate
+  chan1_mode : if (mode = 0) generate
     GC2BI0 : gc2bin port map (gc => data0a(adc_bit_width/2-1 downto 0), bin => user_data_i0);
     GC2BI1 : gc2bin port map (gc => data1a(adc_bit_width/2-1 downto 0), bin => user_data_i1);
     GC2BI2 : gc2bin port map (gc => data2a(adc_bit_width/2-1 downto 0), bin => user_data_i2);
