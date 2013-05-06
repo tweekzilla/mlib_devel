@@ -100,25 +100,41 @@ architecture behavioral of adc5g_dmux2_interface is
 
   -- PLL signals
   signal pll_clkin   : std_logic;
+  signal pll2_clkin  : std_logic;
   signal pll_clkfb   : std_logic;
+  signal pll2_clkfb   : std_logic;
   signal pll_clkout0 : std_logic;
+  signal pll2_clkout0 : std_logic;
   signal pll_clkout1 : std_logic;
   signal pll_clkout2 : std_logic;
   signal pll_clkout3 : std_logic;
   signal pll_clkout4 : std_logic;
   signal pll_locked  : std_logic;
+  signal pll2_locked : std_logic;
   signal pll_rst     : std_logic;
-
+  signal pll2_rst : std_logic;
+  
   -- DCM signals
   signal dcm_clkfbin  : std_logic;
   signal dcm_clkfbout : std_logic;
   signal dcm_locked   : std_logic;
   signal dcm_rst      : std_logic;
-
+  signal dcm2_clkfbin  : std_logic;
+  signal dcm2_clkfbout : std_logic;
+  signal dcm2_locked   : std_logic;
+  signal dcm2_rst      : std_logic;
+  signal dcm2_psdone :  std_logic;
+  signal dcm2_psen :    std_logic;
+  signal dcm2_psincdec : std_logic;
+  
   -- IDDR signals
   signal iddr_clk    : std_logic;
   signal iddr_clkdiv : std_logic;
   signal iddr_rst    : std_logic;
+  signal iddr0_rst      : std_logic_vector(adc_bit_width-1 downto 0);
+  signal iddr1_rst      : std_logic_vector(adc_bit_width-1 downto 0);
+  signal iddr2_rst      : std_logic_vector(adc_bit_width-1 downto 0);
+  signal iddr3_rst      : std_logic_vector(adc_bit_width-1 downto 0);
   
   -- FIFO signals
   signal fifo_rst      : std_logic;
@@ -218,13 +234,59 @@ architecture behavioral of adc5g_dmux2_interface is
   
 begin
 
+ 
   -- Resets
-  adc_reset_o <= '0';
+  --adc_reset_o <= '0';
   iddr_rst     <= ctrl_reset;
   pll_rst     <= ctrl_reset;
   dcm_rst     <= ctrl_reset;
   fifo_rst    <= not pll_locked;
 
+  ADC_R  : FD port map (C => ctrl_clk_in, D => ctrl_reset, Q => adc_reset_o);
+
+--Gray Code conversion
+  chan1_mode: if (mode=0) generate
+    GC2BI0 : gc2bin port map (gc  => data0a(adc_bit_width/2-1 downto 0), bin => user_data_i0);
+    GC2BI1 : gc2bin port map (gc  => data1a(adc_bit_width/2-1 downto 0), bin => user_data_i1);
+    GC2BI2 : gc2bin port map (gc  => data2a(adc_bit_width/2-1 downto 0), bin => user_data_i2);
+    GC2BI3 : gc2bin port map (gc  => data3a(adc_bit_width/2-1 downto 0), bin => user_data_i3);
+    GC2BI4 : gc2bin port map (gc  => data0a(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i4);
+    GC2BI5 : gc2bin port map (gc  => data1a(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i5);
+    GC2BI6 : gc2bin port map (gc  => data2a(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i6);
+    GC2BI7 : gc2bin port map (gc  => data3a(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i7);
+                                                    
+    GC2BQ0 : gc2bin port map (gc  => data0b(adc_bit_width/2-1 downto 0), bin => user_data_q0);
+    GC2BQ1 : gc2bin port map (gc  => data1b(adc_bit_width/2-1 downto 0), bin => user_data_q1);
+    GC2BQ2 : gc2bin port map (gc  => data2b(adc_bit_width/2-1 downto 0), bin => user_data_q2);
+    GC2BQ3 : gc2bin port map (gc  => data3b(adc_bit_width/2-1 downto 0), bin => user_data_q3);
+    GC2BQ4 : gc2bin port map (gc  => data0b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q4);
+    GC2BQ5 : gc2bin port map (gc  => data1b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q5);
+    GC2BQ6 : gc2bin port map (gc  => data2b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q6);
+    GC2BQ7 : gc2bin port map (gc  => data3b(adc_bit_width-1 downto adc_bit_width/2), Bin => user_data_q7);
+  end generate chan1_mode;
+
+  chan2_mode: if (mode=1) generate
+    GC2BI0 : gc2bin port map (gc  => data0a(adc_bit_width/2-1 downto 0), bin => user_data_i0);
+    GC2BI2 : gc2bin port map (gc  => data2a(adc_bit_width/2-1 downto 0), bin => user_data_i1);
+    GC2BI4 : gc2bin port map (gc  => data0a(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i2);
+    GC2BI6 : gc2bin port map (gc  => data2a(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i3);
+    GC2BQ0 : gc2bin port map (gc  => data0b(adc_bit_width/2-1 downto 0), bin => user_data_i4);
+    GC2BQ2 : gc2bin port map (gc  => data2b(adc_bit_width/2-1 downto 0), bin => user_data_i5);
+    GC2BQ4 : gc2bin port map (gc  => data0b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i6);
+    GC2BQ6 : gc2bin port map (gc  => data2b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i7);
+                                                    
+    GC2BI1 : gc2bin port map (gc  => data1a(adc_bit_width/2-1 downto 0), bin => user_data_q0);
+    GC2BI3 : gc2bin port map (gc  => data3a(adc_bit_width/2-1 downto 0), bin => user_data_q1);
+    GC2BI5 : gc2bin port map (gc  => data1a(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q2);
+    GC2BI7 : gc2bin port map (gc  => data3a(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q3);
+
+    GC2BQ1 : gc2bin port map (gc  => data1b(adc_bit_width/2-1 downto 0), bin => user_data_q4);
+    GC2BQ3 : gc2bin port map (gc  => data3b(adc_bit_width/2-1 downto 0), bin => user_data_q5);
+    GC2BQ5 : gc2bin port map (gc  => data1b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q6);
+    GC2BQ7 : gc2bin port map (gc  => data3b(adc_bit_width-1 downto adc_bit_width/2), Bin => user_data_q7);
+  end generate chan2_mode;
+
+  
   -- Clocks
 
   CBUF0 : IBUFDS
@@ -278,7 +340,7 @@ begin
 
   CBUF2a : BUFG port map (i => dcm_clkfbout, o => dcm_clkfbin);
 
-  PLL : PLL_BASE
+  PLL0 : PLL_BASE
     generic map (
       COMPENSATION       => "SYSTEM_SYNCHRONOUS",
       BANDWIDTH          => "OPTIMIZED",
@@ -304,8 +366,8 @@ begin
       REF_JITTER         => 0.1
       )
     port map (
-      --CLKIN    => pll_clkin,
-      CLKIN =>  adc_clk,
+      CLKIN    => pll_clkin,
+      --CLKIN =>  adc_clk,
       CLKFBIN  => pll_clkfb,
       CLKOUT0  => pll_clkout0,
       CLKOUT1  => pll_clkout1,
@@ -317,16 +379,85 @@ begin
       RST      => pll_rst
       );
 
+DCM1 : DCM_ADV
+    generic map (
+      DLL_FREQUENCY_MODE => "HIGH",
+      DFS_FREQUENCY_MODE => "HIGH",
+      CLKOUT_PHASE_SHIFT => "VARIABLE_POSITIVE",
+      CLKIN_PERIOD       => clkin_period
+      )
+    port map (
+      CLK0     => dcm2_clkfbout,
+      CLK90    => pll2_clkin,
+      CLKIN    => adc_clk,
+      CLKFB    => dcm2_clkfbin,
+      DADDR    => "0000000",
+      DCLK     => '0',
+      DEN      => '0',
+      DI       => X"0000",
+      DO       => open,
+      DRDY     => open,
+      DWE      => '0',
+      LOCKED   => dcm2_locked,
+      PSCLK    => dcm_psclk,
+      PSDONE   => dcm2_psdone,
+      PSEN     => dcm_psen,
+      PSINCDEC => dcm_psincdec,
+      RST      => dcm2_rst
+      );
+
+  CBUF2z : BUFG port map (i => dcm2_clkfbout, o => dcm2_clkfbin);
+  
+ PLL1 : PLL_BASE
+    generic map (
+      COMPENSATION       => "SYSTEM_SYNCHRONOUS",
+      BANDWIDTH          => "OPTIMIZED",
+      CLKIN_PERIOD       => clkin_period,
+      DIVCLK_DIVIDE      => pll_d,
+      CLKFBOUT_MULT      => pll_m,
+      CLKFBOUT_PHASE     => 0.0,
+      CLKOUT0_DIVIDE     => pll_o1,
+      --CLKOUT1_DIVIDE     => pll_o1,
+      --CLKOUT2_DIVIDE     => pll_o1,
+      --CLKOUT3_DIVIDE     => pll_o1,
+      --CLKOUT4_DIVIDE     => pll_o1,
+      CLKOUT0_PHASE      => 0.0,
+      --CLKOUT1_PHASE      => 0.0,
+      --CLKOUT2_PHASE      => 90.0,
+      --CLKOUT3_PHASE      => 180.0,
+      --CLKOUT4_PHASE      => 270.0,
+      --CLKOUT1_DUTY_CYCLE => 0.50,
+      CLKOUT0_DUTY_CYCLE => 0.50,
+      --CLKOUT2_DUTY_CYCLE => 0.50,
+      --CLKOUT3_DUTY_CYCLE => 0.50,
+      --CLKOUT4_DUTY_CYCLE => 0.50,
+      REF_JITTER         => 0.1
+      )
+    port map (
+      CLKIN    => pll2_clkin,
+      --CLKIN =>  adc_clk,
+      CLKFBIN  => pll2_clkfb,
+      CLKOUT0  => pll2_clkout0,
+      --CLKOUT1  => pll_clkout1,
+      --CLKOUT2  => pll_clkout2,
+      --CLKOUT3  => pll_clkout3,
+      --CLKOUT4  => pll_clkout4,
+      CLKFBOUT => pll2_clkfb,
+      LOCKED   => pll2_locked,
+      RST      => pll2_rst
+      );
+
+
+  
   CBUF2b : BUFG port map (i => pll_clkout0, o => iddr_clk);
-  CBUF2c : BUFG port map (i => pll_clkout1, o => iddr_clkdiv);
+  CBUF2c : BUFG port map (i => pll2_clkout0, o => iddr_clkdiv);
   CBUF2d : BUFG port map (i => pll_clkout2, o => ctrl_clk90_out);
   CBUF2e : BUFG port map (i => pll_clkout3, o => ctrl_clk180_out);
   CBUF2f : BUFG port map (i => pll_clkout4, o => ctrl_clk270_out);
-
+  
   ctrl_dcm_locked <= dcm_locked;
   sync            <= adc_sync;
-
-  ctrl_clk_out <= iddr_clk90_out;
+  ctrl_clk_out <= iddr_clkdiv;
   
   IBUFDS0 : for i in adc_bit_width-1 downto 0 generate
     IBUFI0 : IBUFDS_LVDS_25
@@ -372,6 +503,7 @@ begin
     -----------------------------------------------------------------------------
     -- Capture the data using IDDR
     -----------------------------------------------------------------------------
+    iddr0_rbuf: FD port map (C => ctrl_clk_in, D => iddr_rst, Q => iddr0_rst(i));
     iddr0 : IDDR
       generic map (
         DDR_CLK_EDGE => "SAME_EDGE_PIPELINED",
@@ -383,10 +515,11 @@ begin
         C  => iddr_clk,
         CE => '1',
         D  => data0(i),
-        R  => iddr_rst,
+        R  => iddr0_rst(i),
         S  => '0'
         );
 
+    iddr1_rbuf: FD port map (C => ctrl_clk_in, D => iddr_rst, Q => iddr1_rst(i));
     iddr1 : IDDR
       generic map (
         DDR_CLK_EDGE => "SAME_EDGE_PIPELINED",
@@ -398,10 +531,11 @@ begin
         C  => iddr_clk,
         CE => '1',
         D  => data1(i),
-        R  => iddr_rst,
+        R  => iddr1_rst(i),
         S  => '0'
         );
 
+    iddr2_rbuf: FD port map (C => ctrl_clk_in, D => iddr_rst, Q => iddr2_rst(i));
     iddr2 : IDDR
       generic map (
         DDR_CLK_EDGE => "SAME_EDGE_PIPELINED",
@@ -413,10 +547,11 @@ begin
         C  => iddr_clk,
         CE => '1',
         D  => data2(i),
-        R  => iddr_rst,
+        R  => iddr2_rst(i),
         S  => '0'
         );
-
+    
+    iddr3_rbuf: FD port map (C => ctrl_clk_in, D => iddr_rst, Q => iddr3_rst(i));
     iddr3 : IDDR
       generic map (
         DDR_CLK_EDGE => "SAME_EDGE_PIPELINED",
@@ -428,46 +563,10 @@ begin
         C  => iddr_clk,
         CE => '1',
         D  => data3(i),
-        R  => iddr_rst,
+        R  => iddr3_rst(i),
         S  => '0'
         ); 
   end generate iddrx;
-
-  --This is where we do things differently
-  --We buffer up everything 3 times, extract from fifo
-  --Then do the gray code to binay conversion
-
-
-  -- Buffer up samples (to help with timing on ROACH2 rev-1)
-  data_buf : for i in adc_bit_width-1 downto 0 generate
-    -- first stage of buffers
-    D0A_1 : FD port map (C => iddr_clkdiv, D => data0a_pre(i), Q => data0a_prebuf0(i));
-    D0B_1 : FD port map (C => iddr_clkdiv, D => data0b_pre(i), Q => data0b_prebuf0(i));
-    D1A_1 : FD port map (C => iddr_clkdiv, D => data1a_pre(i), Q => data1a_prebuf0(i));
-    D1B_1 : FD port map (C => iddr_clkdiv, D => data1b_pre(i), Q => data1b_prebuf0(i));
-    D2A_1 : FD port map (C => iddr_clkdiv, D => data2a_pre(i), Q => data2a_prebuf0(i));
-    D2B_1 : FD port map (C => iddr_clkdiv, D => data2b_pre(i), Q => data2b_prebuf0(i));
-    D3A_1 : FD port map (C => iddr_clkdiv, D => data3a_pre(i), Q => data3a_prebuf0(i));
-    D3B_1 : FD port map (C => iddr_clkdiv, D => data3b_pre(i), Q => data3b_prebuf0(i));
-    -- second stage of buffers
-    D0A_2 : FD port map (C => iddr_clkdiv, D => data0a_prebuf0(i), Q => data0a_prebuf1(i));
-    D0B_2 : FD port map (C => iddr_clkdiv, D => data0b_prebuf0(i), Q => data0b_prebuf1(i));
-    D1A_2 : FD port map (C => iddr_clkdiv, D => data1a_prebuf0(i), Q => data1a_prebuf1(i));
-    D1B_2 : FD port map (C => iddr_clkdiv, D => data1b_prebuf0(i), Q => data1b_prebuf1(i));
-    D2A_2 : FD port map (C => iddr_clkdiv, D => data2a_prebuf0(i), Q => data2a_prebuf1(i));
-    D2B_2 : FD port map (C => iddr_clkdiv, D => data2b_prebuf0(i), Q => data2b_prebuf1(i));
-    D3A_2 : FD port map (C => iddr_clkdiv, D => data3a_prebuf0(i), Q => data3a_prebuf1(i));
-    D3B_2 : FD port map (C => iddr_clkdiv, D => data3b_prebuf0(i), Q => data3b_prebuf1(i));
-    -- third stage of buffers
-    D0A_3 : FD port map (C => iddr_clkdiv, D => data0a_prebuf1(i), Q => data0a_prebuf2(i));
-    D0B_3 : FD port map (C => iddr_clkdiv, D => data0b_prebuf1(i), Q => data0b_prebuf2(i));
-    D1A_3 : FD port map (C => iddr_clkdiv, D => data1a_prebuf1(i), Q => data1a_prebuf2(i));
-    D1B_3 : FD port map (C => iddr_clkdiv, D => data1b_prebuf1(i), Q => data1b_prebuf2(i));
-    D2A_3 : FD port map (C => iddr_clkdiv, D => data2a_prebuf1(i), Q => data2a_prebuf2(i));
-    D2B_3 : FD port map (C => iddr_clkdiv, D => data2b_prebuf1(i), Q => data2b_prebuf2(i));
-    D3A_3 : FD port map (C => iddr_clkdiv, D => data3a_prebuf1(i), Q => data3a_prebuf2(i));
-    D3B_3 : FD port map (C => iddr_clkdiv, D => data3b_prebuf1(i), Q => data3b_prebuf2(i));
-  end generate data_buf;
 
   -- Use FIFO to cross clock domains
   FIFO : fifo_generator_v5_3
@@ -502,10 +601,10 @@ begin
         fifo_rd_en                            <= not fifo_empty;
         fifo_din(143 downto adc_bit_width*8) <= (others => '0');
         fifo_din(adc_bit_width*8-1 downto 0) <=
-          data0b_prebuf2 & data0a_prebuf2 &
-          data1b_prebuf2 & data1a_prebuf2 &
-          data2b_prebuf2 & data2a_prebuf2 &
-          data3b_prebuf2 & data3a_prebuf2;
+          data0b_pre & data0a_pre &
+          data1b_pre & data1a_pre &
+          data2b_pre & data2a_pre &
+          data3b_pre & data3a_pre;
         fifo_din_buf0 <= fifo_din;
         fifo_din_buf1 <= fifo_din_buf0;
       end if;
@@ -544,9 +643,8 @@ begin
   end process;
   fifo_empty_cnt <= fifo_empty_ci;
 
-  fifo_wr_clk <= iddr_clkdiv;
+  fifo_wr_clk <= iddr_clk;
   fifo_rd_clk <= ctrl_clk_in;
-  --fifo_rd_clk <= iddr_clkdiv;
   data0b      <= fifo_dout(adc_bit_width*8-1 downto adc_bit_width*7);
   data0a      <= fifo_dout(adc_bit_width*7-1 downto adc_bit_width*6);
   data1b      <= fifo_dout(adc_bit_width*6-1 downto adc_bit_width*5);
@@ -555,49 +653,5 @@ begin
   data2a      <= fifo_dout(adc_bit_width*3-1 downto adc_bit_width*2);
   data3b      <= fifo_dout(adc_bit_width*2-1 downto adc_bit_width);
   data3a      <= fifo_dout(adc_bit_width-1 downto 0);
-
-
-  --user_data_i0 <= test_signal;
-  -- !!!Note channel ordering here may well be wrong!!!!
-  chan1_mode : if (mode = 0) generate
-    GC2BI0 : gc2bin port map (gc => data0a(adc_bit_width/2-1 downto 0), bin => user_data_i0);
-    GC2BI1 : gc2bin port map (gc => data1a(adc_bit_width/2-1 downto 0), bin => user_data_i1);
-    GC2BI2 : gc2bin port map (gc => data2a(adc_bit_width/2-1 downto 0), bin => user_data_i2);
-    GC2BI3 : gc2bin port map (gc => data3a(adc_bit_width/2-1 downto 0), bin => user_data_i3);
-    GC2BI4 : gc2bin port map (gc => data0a(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i4);
-    GC2BI5 : gc2bin port map (gc => data1a(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i5);
-    GC2BI6 : gc2bin port map (gc => data2a(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i6);
-    GC2BI7 : gc2bin port map (gc => data3a(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i7);
-
-    GC2BQ0 : gc2bin port map (gc => data0b(adc_bit_width/2-1 downto 0), bin => user_data_q0);
-    GC2BQ1 : gc2bin port map (gc => data1b(adc_bit_width/2-1 downto 0), bin => user_data_q1);
-    GC2BQ2 : gc2bin port map (gc => data2b(adc_bit_width/2-1 downto 0), bin => user_data_q2);
-    GC2BQ3 : gc2bin port map (gc => data3b(adc_bit_width/2-1 downto 0), bin => user_data_q3);
-    GC2BQ4 : gc2bin port map (gc => data0b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q4);
-    GC2BQ5 : gc2bin port map (gc => data1b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q5);
-    GC2BQ6 : gc2bin port map (gc => data2b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q6);
-    GC2BQ7 : gc2bin port map (gc => data3b(adc_bit_width-1 downto adc_bit_width/2), Bin => user_data_q7);
-  end generate chan1_mode;
-
-  chan2_mode : if (mode = 1) generate
-    GC2BI0 : gc2bin port map (gc => data0a(adc_bit_width/2-1 downto 0), bin => user_data_i0);
-    GC2BI2 : gc2bin port map (gc => data2a(adc_bit_width/2-1 downto 0), bin => user_data_i1);
-    GC2BI4 : gc2bin port map (gc => data0a(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i2);
-    GC2BI6 : gc2bin port map (gc => data2a(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i3);
-    GC2BQ0 : gc2bin port map (gc => data0b(adc_bit_width/2-1 downto 0), bin => user_data_i4);
-    GC2BQ2 : gc2bin port map (gc => data2b(adc_bit_width/2-1 downto 0), bin => user_data_i5);
-    GC2BQ4 : gc2bin port map (gc => data0b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i6);
-    GC2BQ6 : gc2bin port map (gc => data2b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i7);
-
-    GC2BI1 : gc2bin port map (gc => data1a(adc_bit_width/2-1 downto 0), bin => user_data_q0);
-    GC2BI3 : gc2bin port map (gc => data3a(adc_bit_width/2-1 downto 0), bin => user_data_q1);
-    GC2BI5 : gc2bin port map (gc => data1a(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q2);
-    GC2BI7 : gc2bin port map (gc => data3a(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q3);
-
-    GC2BQ1 : gc2bin port map (gc => data1b(adc_bit_width/2-1 downto 0), bin => user_data_q4);
-    GC2BQ3 : gc2bin port map (gc => data3b(adc_bit_width/2-1 downto 0), bin => user_data_q5);
-    GC2BQ5 : gc2bin port map (gc => data1b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q6);
-    GC2BQ7 : gc2bin port map (gc => data3b(adc_bit_width-1 downto adc_bit_width/2), Bin => user_data_q7);
-  end generate chan2_mode;
 
 end behavioral;
