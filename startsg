@@ -2,11 +2,12 @@
 ####### User to edit these accordingly ######
 export MATLAB_PATH=/opt/MATLAB/R2012a
 PLATFORM=lin64
-export XILINX_PATH=/opt/Xilinx/14.2/ISE_DS
-export MLIB_DEVEL_PATH=/opt/casper_library/mlib_devel
+export XILINX_PATH=/opt/Xilinx/14.5/ISE_DS
+export MLIB_DEVEL_PATH=/home/rw247/gitrepos/mlib_devel
 #############################################
 source $XILINX_PATH/settings64.sh
 export PATH=${PATH}:${XILINX}/ISE/bin/${PLATFORM}:${XILINX_PATH}/ISE/sysgen/bin/${PLATFORM}
+export LD_LIBRARY_PATH=${XILINX}/ISE/sysgen/bin/lin64/dot:${XILINX}/ISE/sysgen/bin/lin64/dot/graphviz:$LD_LIBRARY_PATH
 export XPS_BASE_PATH=$MLIB_DEVEL_PATH/xps_base
 export MATLAB=$MATLAB_PATH
 $MATLAB/bin/matlab
