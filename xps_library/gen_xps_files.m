@@ -73,16 +73,13 @@ slash = '\';
 system_os = '';
 [s,w] = system('uname -a');
 
-if s ~= 0
-  [s,w] = system('ver');
-  if s ~= 0
-    disp(sprint('Could not detect OS, assuming Windows'));
-  elseif ~isempty(regexp(w,'Windows'))
+%if s ~= 0
+%This bit is always zero
+% if s ~= 0
+%    disp(sprint('Could not detect OS, assuming Windows'));
+if ~isempty(regexp(w,'indows'))
     disp(sprintf('Detected Windows OS'));
-  else
-    disp(sprintf('Detected Unknown Windows-like OS'));
-  end
-  system_os = 'windows';
+    system_os = 'windows';
 elseif ~isempty(regexp(w,'Linux'))
   slash = '/';
   disp(sprintf('Detected Linux OS'));

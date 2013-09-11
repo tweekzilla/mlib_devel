@@ -75,6 +75,14 @@ entity adc5g_dmux2_interface is
     user_data_i5    : out std_logic_vector(adc_bit_width/2-1 downto 0);
     user_data_i6    : out std_logic_vector(adc_bit_width/2-1 downto 0);
     user_data_i7    : out std_logic_vector(adc_bit_width/2-1 downto 0);
+    user_data_i8    : out std_logic_vector(adc_bit_width/2-1 downto 0);
+    user_data_i9    : out std_logic_vector(adc_bit_width/2-1 downto 0);
+    user_data_i10    : out std_logic_vector(adc_bit_width/2-1 downto 0);
+    user_data_i11   : out std_logic_vector(adc_bit_width/2-1 downto 0);
+    user_data_i12    : out std_logic_vector(adc_bit_width/2-1 downto 0);
+    user_data_i13    : out std_logic_vector(adc_bit_width/2-1 downto 0);
+    user_data_i14    : out std_logic_vector(adc_bit_width/2-1 downto 0);
+    user_data_i15    : out std_logic_vector(adc_bit_width/2-1 downto 0);
     user_data_q0    : out std_logic_vector(adc_bit_width/2-1 downto 0);
     user_data_q1    : out std_logic_vector(adc_bit_width/2-1 downto 0);
     user_data_q2    : out std_logic_vector(adc_bit_width/2-1 downto 0);
@@ -83,6 +91,14 @@ entity adc5g_dmux2_interface is
     user_data_q5    : out std_logic_vector(adc_bit_width/2-1 downto 0);
     user_data_q6    : out std_logic_vector(adc_bit_width/2-1 downto 0);
     user_data_q7    : out std_logic_vector(adc_bit_width/2-1 downto 0);
+    user_data_q8    : out std_logic_vector(adc_bit_width/2-1 downto 0);
+    user_data_q9    : out std_logic_vector(adc_bit_width/2-1 downto 0);
+    user_data_q10    : out std_logic_vector(adc_bit_width/2-1 downto 0);
+    user_data_q11    : out std_logic_vector(adc_bit_width/2-1 downto 0);
+    user_data_q12    : out std_logic_vector(adc_bit_width/2-1 downto 0);
+    user_data_q13    : out std_logic_vector(adc_bit_width/2-1 downto 0);
+    user_data_q14    : out std_logic_vector(adc_bit_width/2-1 downto 0);
+    user_data_q15    : out std_logic_vector(adc_bit_width/2-1 downto 0);
     adc_reset_o     : out std_logic
     );
 end  adc5g_dmux2_interface ;
@@ -144,6 +160,8 @@ architecture behavioral of adc5g_dmux2_interface is
   signal data0         : std_logic_vector(adc_bit_width-1 downto 0);
   signal data0a        : std_logic_vector(adc_bit_width-1 downto 0);
   signal data0b        : std_logic_vector(adc_bit_width-1 downto 0);
+  signal data0c        : std_logic_vector(adc_bit_width-1 downto 0);
+  signal data0d        : std_logic_vector(adc_bit_width-1 downto 0);
   signal data0a_pre    : std_logic_vector(adc_bit_width-1 downto 0);
   signal data0b_pre    : std_logic_vector(adc_bit_width-1 downto 0);
 
@@ -151,6 +169,8 @@ architecture behavioral of adc5g_dmux2_interface is
   signal data1         : std_logic_vector(adc_bit_width-1 downto 0);
   signal data1a        : std_logic_vector(adc_bit_width-1 downto 0);
   signal data1b        : std_logic_vector(adc_bit_width-1 downto 0);
+  signal data1c        : std_logic_vector(adc_bit_width-1 downto 0);
+  signal data1d        : std_logic_vector(adc_bit_width-1 downto 0);
   signal data1a_pre    : std_logic_vector(adc_bit_width-1 downto 0);
   signal data1b_pre    : std_logic_vector(adc_bit_width-1 downto 0);
   
@@ -158,6 +178,8 @@ architecture behavioral of adc5g_dmux2_interface is
   signal data2         : std_logic_vector(adc_bit_width-1 downto 0);
   signal data2a        : std_logic_vector(adc_bit_width-1 downto 0);
   signal data2b        : std_logic_vector(adc_bit_width-1 downto 0);
+  signal data2c        : std_logic_vector(adc_bit_width-1 downto 0);     
+  signal data2d        : std_logic_vector(adc_bit_width-1 downto 0);
   signal data2a_pre    : std_logic_vector(adc_bit_width-1 downto 0);
   signal data2b_pre    : std_logic_vector(adc_bit_width-1 downto 0);
 
@@ -165,6 +187,8 @@ architecture behavioral of adc5g_dmux2_interface is
   signal data3         : std_logic_vector(adc_bit_width-1 downto 0);
   signal data3a        : std_logic_vector(adc_bit_width-1 downto 0);
   signal data3b        : std_logic_vector(adc_bit_width-1 downto 0);
+  signal data3c        : std_logic_vector(adc_bit_width-1 downto 0);
+  signal data3d        : std_logic_vector(adc_bit_width-1 downto 0);
   signal data3a_pre    : std_logic_vector(adc_bit_width-1 downto 0);
   signal data3b_pre    : std_logic_vector(adc_bit_width-1 downto 0);
 
@@ -221,6 +245,25 @@ begin
     GC2BQ5 : gc2bin port map (gc  => data1b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q5);
     GC2BQ6 : gc2bin port map (gc  => data2b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q6);
     GC2BQ7 : gc2bin port map (gc  => data3b(adc_bit_width-1 downto adc_bit_width/2), Bin => user_data_q7);
+
+    -- Second clock cycle FIFO output
+    GC2BI8 : gc2bin port map (gc  => data0c(adc_bit_width/2-1 downto 0), bin => user_data_i8);
+    GC2BI9 : gc2bin port map (gc  => data1c(adc_bit_width/2-1 downto 0), bin => user_data_i9);
+    GC2BI10 : gc2bin port map (gc  => data2c(adc_bit_width/2-1 downto 0), bin => user_data_i10);
+    GC2BI11 : gc2bin port map (gc  => data3c(adc_bit_width/2-1 downto 0), bin => user_data_i11);
+    GC2BI12 : gc2bin port map (gc  => data0c(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i12);
+    GC2BI13 : gc2bin port map (gc  => data1c(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i13);
+    GC2BI14 : gc2bin port map (gc  => data2c(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i14);
+    GC2BI15 : gc2bin port map (gc  => data3c(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i15);
+    
+    GC2BQ8 : gc2bin port map (gc  => data0d(adc_bit_width/2-1 downto 0), bin => user_data_q8);
+    GC2BQ9 : gc2bin port map (gc  => data1d(adc_bit_width/2-1 downto 0), bin => user_data_q9);
+    GC2BQ10 : gc2bin port map (gc  => data2d(adc_bit_width/2-1 downto 0), bin => user_data_q10);
+    GC2BQ11 : gc2bin port map (gc  => data3d(adc_bit_width/2-1 downto 0), bin => user_data_q11);
+    GC2BQ12 : gc2bin port map (gc  => data0d(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q12);
+    GC2BQ13 : gc2bin port map (gc  => data1d(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q13);
+    GC2BQ14 : gc2bin port map (gc  => data2d(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q14);
+    GC2BQ15 : gc2bin port map (gc  => data3d(adc_bit_width-1 downto adc_bit_width/2), Bin => user_data_q15);
   end generate chan1_mode;
 
   chan2_mode: if (mode=1) generate
@@ -228,6 +271,7 @@ begin
     GC2BI2 : gc2bin port map (gc  => data2a(adc_bit_width/2-1 downto 0), bin => user_data_i1);
     GC2BI4 : gc2bin port map (gc  => data0a(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i2);
     GC2BI6 : gc2bin port map (gc  => data2a(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i3);
+
     GC2BQ0 : gc2bin port map (gc  => data0b(adc_bit_width/2-1 downto 0), bin => user_data_i4);
     GC2BQ2 : gc2bin port map (gc  => data2b(adc_bit_width/2-1 downto 0), bin => user_data_i5);
     GC2BQ4 : gc2bin port map (gc  => data0b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i6);
@@ -242,6 +286,29 @@ begin
     GC2BQ3 : gc2bin port map (gc  => data3b(adc_bit_width/2-1 downto 0), bin => user_data_q5);
     GC2BQ5 : gc2bin port map (gc  => data1b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q6);
     GC2BQ7 : gc2bin port map (gc  => data3b(adc_bit_width-1 downto adc_bit_width/2), Bin => user_data_q7);
+
+    -- Second clock fifo output
+
+    GC2BI8 : gc2bin port map (gc  => data0c(adc_bit_width/2-1 downto 0), bin => user_data_i8);
+    GC2BI10 : gc2bin port map (gc  => data2c(adc_bit_width/2-1 downto 0), bin => user_data_i9);
+    GC2BI12 : gc2bin port map (gc  => data0c(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i10);
+    GC2BI14 : gc2bin port map (gc  => data2c(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i11);
+
+    GC2BQ8 : gc2bin port map (gc  => data0d(adc_bit_width/2-1 downto 0), bin => user_data_i12);
+    GC2BQ10 : gc2bin port map (gc  => data2d(adc_bit_width/2-1 downto 0), bin => user_data_i13);
+    GC2BQ12 : gc2bin port map (gc  => data0d(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i14);
+    GC2BQ14 : gc2bin port map (gc  => data2d(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i15);
+    
+    GC2BI9 : gc2bin port map (gc  => data1c(adc_bit_width/2-1 downto 0), bin => user_data_q8);
+    GC2BI11 : gc2bin port map (gc  => data3c(adc_bit_width/2-1 downto 0), bin => user_data_q9);
+    GC2BI13 : gc2bin port map (gc  => data1c(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q10);
+    GC2BI15 : gc2bin port map (gc  => data3c(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q11);
+
+    GC2BQ9 : gc2bin port map (gc  => data1d(adc_bit_width/2-1 downto 0), bin => user_data_q12);
+    GC2BQ11 : gc2bin port map (gc  => data3d(adc_bit_width/2-1 downto 0), bin => user_data_q13);
+    GC2BQ13 : gc2bin port map (gc  => data1d(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q14);
+    GC2BQ15 : gc2bin port map (gc  => data3d(adc_bit_width-1 downto adc_bit_width/2), Bin => user_data_q15);
+    
   end generate chan2_mode;
 
 
