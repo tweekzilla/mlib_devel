@@ -21,8 +21,8 @@ use ieee.numeric_std.all;
 library unisim;
 use unisim.vcomponents.all;
 
-library adc5g_dmux1_interface_v1_00_a;
-use adc5g_dmux1_interface_v1_00_a.all;
+--library adc5g_dmux1_interface_v1_00_a;
+--use adc5g_dmux1_interface_v1_00_a.all;
 
 --------------------------------------------
 --    ENTITY section
@@ -31,12 +31,12 @@ use adc5g_dmux1_interface_v1_00_a.all;
 entity adc5g_dmux2_interface is
   generic (  
     adc_bit_width   : integer :=8;
-    clkin_period    : real    :=2.0;  -- clock in period (ns)
+    clkin_period    : real    :=3.4;  -- clock in period (ns)
     mode            : integer :=0;    -- 1-channel mode
     pll_m         : integer := 2;       -- PLL multiplier value
     pll_d         : integer := 1;       -- PLL divide value
-    pll_o0        : integer := 1;       -- PLL first clock divide
-    pll_o1        : integer := 1        -- PLL second clock divide
+    pll_o0        : integer := 2;       -- PLL first clock divide
+    pll_o1        : integer := 4        -- PLL second clock divide
     );
   port (
     adc_clk_p_i     : in std_logic;
@@ -236,26 +236,26 @@ begin
     GC2BI5 : gc2bin port map (gc  => data1a(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i5);
     GC2BI6 : gc2bin port map (gc  => data2a(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i6);
     GC2BI7 : gc2bin port map (gc  => data3a(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i7);
-    
-    GC2BQ0 : gc2bin port map (gc  => data0b(adc_bit_width/2-1 downto 0), bin => user_data_q0);
-    GC2BQ1 : gc2bin port map (gc  => data1b(adc_bit_width/2-1 downto 0), bin => user_data_q1);
-    GC2BQ2 : gc2bin port map (gc  => data2b(adc_bit_width/2-1 downto 0), bin => user_data_q2);
-    GC2BQ3 : gc2bin port map (gc  => data3b(adc_bit_width/2-1 downto 0), bin => user_data_q3);
-    GC2BQ4 : gc2bin port map (gc  => data0b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q4);
-    GC2BQ5 : gc2bin port map (gc  => data1b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q5);
-    GC2BQ6 : gc2bin port map (gc  => data2b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q6);
-    GC2BQ7 : gc2bin port map (gc  => data3b(adc_bit_width-1 downto adc_bit_width/2), Bin => user_data_q7);
 
-    -- Second clock cycle FIFO output
-    GC2BI8 : gc2bin port map (gc  => data0c(adc_bit_width/2-1 downto 0), bin => user_data_i8);
-    GC2BI9 : gc2bin port map (gc  => data1c(adc_bit_width/2-1 downto 0), bin => user_data_i9);
-    GC2BI10 : gc2bin port map (gc  => data2c(adc_bit_width/2-1 downto 0), bin => user_data_i10);
-    GC2BI11 : gc2bin port map (gc  => data3c(adc_bit_width/2-1 downto 0), bin => user_data_i11);
-    GC2BI12 : gc2bin port map (gc  => data0c(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i12);
-    GC2BI13 : gc2bin port map (gc  => data1c(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i13);
-    GC2BI14 : gc2bin port map (gc  => data2c(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i14);
-    GC2BI15 : gc2bin port map (gc  => data3c(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i15);
+    GC2BI8 : gc2bin port map (gc  => data0b(adc_bit_width/2-1 downto 0), bin => user_data_i8);
+    GC2BI9 : gc2bin port map (gc  => data1b(adc_bit_width/2-1 downto 0), bin => user_data_i9);
+    GC2BI10 : gc2bin port map (gc  => data2b(adc_bit_width/2-1 downto 0), bin => user_data_i10);
+    GC2BI11 : gc2bin port map (gc  => data3b(adc_bit_width/2-1 downto 0), bin => user_data_i11);
+    GC2BI12 : gc2bin port map (gc  => data0b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i12);
+    GC2BI13 : gc2bin port map (gc  => data1b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i13);
+    GC2BI14 : gc2bin port map (gc  => data2b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i14);
+    GC2BI15 : gc2bin port map (gc  => data3b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_i15);
+
     
+    GC2BQ0 : gc2bin port map (gc  => data0c(adc_bit_width/2-1 downto 0), bin => user_data_q0);
+    GC2BQ1 : gc2bin port map (gc  => data1c(adc_bit_width/2-1 downto 0), bin => user_data_q1);
+    GC2BQ2 : gc2bin port map (gc  => data2c(adc_bit_width/2-1 downto 0), bin => user_data_q2);
+    GC2BQ3 : gc2bin port map (gc  => data3c(adc_bit_width/2-1 downto 0), bin => user_data_q3);
+    GC2BQ4 : gc2bin port map (gc  => data0c(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q4);
+    GC2BQ5 : gc2bin port map (gc  => data1c(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q5);
+    GC2BQ6 : gc2bin port map (gc  => data2c(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q6);
+    GC2BQ7 : gc2bin port map (gc  => data3c(adc_bit_width-1 downto adc_bit_width/2), Bin => user_data_q7);
+  
     GC2BQ8 : gc2bin port map (gc  => data0d(adc_bit_width/2-1 downto 0), bin => user_data_q8);
     GC2BQ9 : gc2bin port map (gc  => data1d(adc_bit_width/2-1 downto 0), bin => user_data_q9);
     GC2BQ10 : gc2bin port map (gc  => data2d(adc_bit_width/2-1 downto 0), bin => user_data_q10);
@@ -548,6 +548,7 @@ begin
   -- inputs : fifo_wr_clk, fifo_rst, fifo_afull
   -- outputs: fifo_rd_en, fifo_din_buf(n)
   FIFO_RD_CTRL: process (fifo_wr_clk, fifo_rst, fifo_afull)
+  variable ping_pong: boolean := True;
   begin  -- process FIFO_RD_CTRL
     if fifo_wr_clk'event and fifo_wr_clk = '1' then  -- rising clock edge
       if fifo_rst = '1' then              -- synchronous reset (active high)
@@ -559,14 +560,24 @@ begin
       else
         fifo_wr_en <= '1';
         fifo_rd_en <= not fifo_empty;
-        fifo_din(143 downto adc_bit_width*8) <= (others => '0');
-        fifo_din(adc_bit_width*8-1 downto 0) <=
-          data0b_pre & data0a_pre &
-          data1b_pre & data1a_pre &
-          data2b_pre & data2a_pre &
-          data3b_pre & data3a_pre;
-        fifo_din_buf0 <= fifo_din;
-        fifo_din_buf1 <= fifo_din_buf0;
+		  if ping_pong then
+			fifo_din(143 downto adc_bit_width*8) <= (others => '0');
+			fifo_din(adc_bit_width*8-1 downto 0) <=
+				data0b_pre & data0a_pre &
+				data1b_pre & data1a_pre &
+				data2b_pre & data2a_pre &
+				data3b_pre & data3a_pre;
+			fifo_din_buf0 <= fifo_din;
+			fifo_din_buf1 <= fifo_din_buf0;
+				ping_pong := False;
+			else
+				fifo_din(adc_bit_width*8*2-1 downto adc_bit_width*8) <=
+					data0b_pre & data0a_pre &
+					data1b_pre & data1a_pre &
+					data2b_pre & data2a_pre &
+					data3b_pre & data3a_pre;
+				ping_pong := True;
+			end if;
       end if;
     end if;
   end process FIFO_RD_CTRL;
@@ -613,6 +624,15 @@ begin
   data2a <= fifo_dout(adc_bit_width*3-1 downto adc_bit_width*2);
   data3b <= fifo_dout(adc_bit_width*2-1 downto adc_bit_width);
   data3a <= fifo_dout(adc_bit_width-1   downto 0);
+
+  data0d <= fifo_dout(adc_bit_width*8+adc_bit_width*8-1 downto adc_bit_width*8+adc_bit_width*7);
+  data0c <= fifo_dout(adc_bit_width*8+adc_bit_width*7-1 downto adc_bit_width*8+adc_bit_width*6);
+  data1d <= fifo_dout(adc_bit_width*8+adc_bit_width*6-1 downto adc_bit_width*8+adc_bit_width*5);
+  data1c <= fifo_dout(adc_bit_width*8+adc_bit_width*5-1 downto adc_bit_width*8+adc_bit_width*4);
+  data2d <= fifo_dout(adc_bit_width*8+adc_bit_width*4-1 downto adc_bit_width*8+adc_bit_width*3);
+  data2c <= fifo_dout(adc_bit_width*8+adc_bit_width*3-1 downto adc_bit_width*8+adc_bit_width*2);
+  data3d <= fifo_dout(adc_bit_width*8+adc_bit_width*2-1 downto adc_bit_width*8+adc_bit_width);
+  data3c <= fifo_dout(adc_bit_width*8+adc_bit_width-1   downto adc_bit_width*8);
 
   
 end behavioral;    
