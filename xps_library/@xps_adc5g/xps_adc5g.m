@@ -56,7 +56,7 @@ if strcmp(demux, '1:1')
     s.sysclk_rate = s.adc_clk_rate/2;
 elseif strcmp(demux, '1:2')
     s.adc_clk_rate = actual_adc_clk_rate/8;
-    s.sysclk_rate = s.adc_clk_rate/2;
+    s.sysclk_rate = s.adc_clk_rate;
 else
     error(['Demux of ', demux, ' not supported!']);
 end
