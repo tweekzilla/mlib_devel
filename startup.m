@@ -11,15 +11,11 @@ addpath([getenv('XILINX_PATH'), '/ISE/sysgen/util/']);
 addpath([getenv('XILINX_PATH'), '/ISE/sysgen/bin/lin64']);
 addpath([getenv('MLIB_DEVEL_PATH'), '/casper_library']);
 addpath([getenv('MLIB_DEVEL_PATH'), '/xps_library']);
+addpath('/home/rw247/monroe_library/casper_libraries/xblocks_devel/xblocks_library')
+addpath('/home/rw247/monroe_library/monroe_library/xblock_helper_functions')
+addpath('/home/rw247/monroe_library/monroe_library')
 xlAddSysgen([getenv('XILINX_PATH'), '/ISE'])
 sysgen_startup
-% If CASPER_BACKPORT is in the environment with non-zero length, then force
-% block reuse and do NOT preload CASPER libraries.  This prevents problems when
-% saving libraries in older Simulink formats (aka "backporting"), but should
-% NOT be used for normal development.
-if length(getenv('CASPER_BACKPORT')) > 0
-  casper_force_reuse_block = 1;
-else
-  load_system('casper_library');
-  load_system('xps_library');
-end
+load_system('casper_library');
+load_system('xps_library');
+load_system('monroe_library');
