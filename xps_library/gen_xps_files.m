@@ -70,17 +70,19 @@ time_software = 0;
 time_edk      = 0;
 
 slash = '\';
-system_os = '';
-[s,w] = system('uname -a');
+[s, w] = system('uname -a');
 
-%if s ~= 0
-%This bit is always zero
-% if s ~= 0
-%    disp(sprint('Could not detect OS, assuming Windows'));
-if ~isempty(regexp(w,'indows'))
-    disp(sprintf('Detected Windows OS'));
-    system_os = 'windows';
-elseif ~isempty(regexp(w,'Linux'))
+if s ~= 0
+  [s, w] = system('ver');
+  if s ~= 0,
+    disp(sprint('Could not detect OS, assuming Windows'));
+  elseif ~isempty(regexp(w,'Windows', 'ONCE')),
+    fprintf('Detected Windows OS');
+  else
+    fprintf('Detected Unknown Windows-like OS');
+  end
+  system_os = 'windows';
+elseif ~isempty(regexp(w, 'Linux', 'ONCE')),
   slash = '/';
   disp(sprintf('Detected Linux OS'));
   system_os = 'linux';

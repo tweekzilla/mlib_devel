@@ -21,11 +21,9 @@
 %                                                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-lib_block_name = 'adc083000';
-fprintf('Running mask script for %s\n', lib_block_name);
-load_system('xbsBasic_r4');
+clog('Running adc083000_mask', 'trace');
 cursys = gcb;
-disp(cursys)
+clog(cursys, 'debug');
 
 demux_adc = strcmp( get_param(cursys, 'demux_adc'), 'on');
 use_adc0 = strcmp( get_param(cursys, 'use_adc0'), 'on');
@@ -218,7 +216,7 @@ for k=1:length(portnames),
         gateway_in_name = [gateway_in_name, toks{1}{1}, '_user_', toks{1}{2}];
     end
     
-    reuse_block(cursys, gateway_in_name, 'xbsBasic_r4/Gateway In', ...
+    reuse_block(cursys, gateway_in_name, 'xbsIndex_r4/Gateway In', ...
         'Position', gateway_in_pos, ...
         'n_bits', num2str( portwidths(k) ), ...
         'bin_pt', num2str( 0 ), ...

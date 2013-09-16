@@ -9,34 +9,34 @@ delete_lines(cursys);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % acc_length is in terms of 128-bit (144-bit!) words!
-rowsPerBlock = ceil(acc_length/512.)
+rowsPerBlock = ceil(acc_length/512.);
 if rowsPerBlock > 1
-    blockRowBits = ceil(log2(rowsPerBlock))
+    blockRowBits = ceil(log2(rowsPerBlock));
 else 
-    blockRowBits = 0
+    blockRowBits = 0;
 end
 
 % 8 bits to go through 256*4*72 of 1K length row
 % basically 2 bits (representing 144 bits of data) is not counted in this
 % counters and its attached later. 
 if acc_length < 512
-	colCountBits = ceil(log2(acc_length/2))
+	colCountBits = ceil(log2(acc_length/2));
 else 
-	colCountBits = 8 
+	colCountBits = 8;
 end
 
 % number of rows can be any number and it is not necessary to be a power of
 % two!  
-numBlocks = 2^(14-blockRowBits)*8
-%numBlocks = floor(2^14./rowsPerBlock)*8
-blockCountBits = ceil(log2(numBlocks))
-counterBitWidth =  blockRowBits+colCountBits
+numBlocks = 2^(14-blockRowBits)*8;
+%numBlocks = floor(2^14./rowsPerBlock)*8;
+blockCountBits = ceil(log2(numBlocks));
+counterBitWidth =  blockRowBits+colCountBits;
 
 readAddrInitVal = valid_length/2;
 
-disp('acc_length/2-1 is:'); 
+%disp('acc_length/2-1 is:'); 
 
-acc_length/2-1
+acc_length/2-1;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 reuse_block(cursys, 'sync', 'built-in/inport', 'Position', [30 65 60 79], 'Port', '1');
@@ -106,7 +106,7 @@ reuse_block(cursys, 'slice14', 'xbsIndex_r4/Slice',...
 				'Position', [495 301 525 321], 'mode' , 'Upper Bit Location + Width','nbits','1'); 
 reuse_block(cursys, 'slice15', 'xbsIndex_r4/Slice',...                                                 				
 				'Position', [495 361 525 381], 'mode' , 'Lower Bit Location + Width','nbits','blockCountBits-3');
-reuse_block(cursys, 'compare', 'xbsIndex_r4/Relational',...
+reuse_block(cursys, 'compare', 'xbsIndex_r4/Relational', 'latency', '1', ...
 				'Position', [445 501 485 551]);
 reuse_block(cursys, 'const4', 'xbsIndex_r4/Constant',...                                                 		    
 				'Position', [345 570 385 590], 'n_bits', 'counterBitWidth', 'bin_pt','0',...

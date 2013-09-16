@@ -1,15 +1,16 @@
 Library {
   Name			  "casper_library"
-  Version		  7.4
+  Version		  7.2
   MdlSubVersion		  0
-  SavedCharacterEncoding  "windows-1252"
-  PostLoadFcn		  "% Stub definitions for mask variables\ndelay_depth=16;\nn_bits=8;\nbin_pt=7;\n% Pre-load sublibrarie"
-  "s\nload_system('casper_library_accumulators');\nload_system('casper_library_communications');\nload_system('casper_l"
-  "ibrary_correlator');\nload_system('casper_library_delays');\nload_system('casper_library_downconverter');\nload_syst"
-  "em('casper_library_ffts');\nload_system('casper_library_ffts_internal');\nload_system('casper_library_ffts_twiddle')"
-  ";\nload_system('casper_library_ffts_twiddle_coeff_gen');\nload_system('casper_library_flow_control');\nload_system('"
-  "casper_library_misc');\nload_system('casper_library_multipliers');\nload_system('casper_library_pfbs');\nload_system"
-  "('casper_library_reorder');\nload_system('casper_library_scopes');\nload_system('casper_library_sources');\n\n"
+  SavedCharacterEncoding  "US-ASCII"
+  PostLoadFcn		  "% Pre-load sublibraries\nload_system('casper_library_accumulators');\nload_system('casper_library_co"
+  "mmunications');\nload_system('casper_library_correlator');\nload_system('casper_library_delays');\ncasper_library_do"
+  "wnconverter_init;\nload_system('casper_library_downconverter');\nload_system('casper_library_ffts');\nload_system('c"
+  "asper_library_ffts_internal');\nload_system('casper_library_ffts_twiddle');\nload_system('casper_library_ffts_twiddl"
+  "e_coeff_gen');\nload_system('casper_library_flow_control');\nload_system('casper_library_misc');\nload_system('caspe"
+  "r_library_multipliers');\nload_system('casper_library_pfbs');\nload_system('casper_library_reorder');\nload_system('"
+  "casper_library_scopes');\nload_system('casper_library_sources');\ncasper_library_bus_init;\nload_system('casper_libr"
+  "ary_bus');\n\n"
   LibraryType		  "BlockLibrary"
   SaveDefaultBlockParams  on
   ScopeRefreshTime	  0.035000
@@ -128,16 +129,15 @@ Library {
   "asper_library_accumulators/simple_bram_vacc||__slOldName__||casper_library/Accumulators/qdr_vacc||__slNewName__||cas"
   "per_library_accumulators/qdr_vacc||__slOldName__||casper_library/Accumulators/dram_vacc||__slNewName__||casper_libra"
   "ry_accumulators/dram_vacc"
-  MaxMDLFileLineLength	  120
   Created		  "Mon Aug 21 14:15:01 2006"
   Creator		  "mwagner"
   UpdateHistory		  "UpdateHistoryNever"
   ModifiedByFormat	  "%<Auto>"
-  LastModifiedBy	  "wjm"
+  LastModifiedBy	  "mdexter"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Mon Dec 20 01:36:12 2010"
-  RTWModifiedTimeStamp	  214709754
-  ModelVersionFormat	  "1.%<AutoIncrement:1267>"
+  LastModifiedDate	  "Tue May 14 23:44:52 2013"
+  RTWModifiedTimeStamp	  290475428
+  ModelVersionFormat	  "1.%<AutoIncrement:1272>"
   ConfigurationManager	  "None"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -165,17 +165,16 @@ Library {
   LinearizationMsg	  "none"
   Profile		  off
   ParamWorkspaceSource	  "MATLABWorkspace"
+  RecordCoverage	  off
   CovSaveName		  "covdata"
   CovMetricSettings	  "dw"
   CovNameIncrementing	  off
   CovHtmlReporting	  on
-  CovForceBlockReductionOff on
   covSaveCumulativeToWorkspaceVar on
   CovSaveSingleToWorkspaceVar on
   CovCumulativeReport	  off
   CovReportOnPause	  on
   CovModelRefEnable	  "Off"
-  CovExternalEMLEnable	  off
   ExtModeBatchMode	  off
   ExtModeEnableFloating	  on
   ExtModeTrigType	  "manual"
@@ -204,13 +203,13 @@ Library {
     Dimension		    1
     Simulink.ConfigSet {
       $ObjectID		      1
-      Version		      "1.6.0"
+      Version		      "1.5.1"
       Array {
 	Type			"Handle"
 	Dimension		8
 	Simulink.SolverCC {
 	  $ObjectID		  2
-	  Version		  "1.6.0"
+	  Version		  "1.5.1"
 	  StartTime		  "0.0"
 	  StopTime		  "10.0"
 	  AbsTol		  "auto"
@@ -242,7 +241,7 @@ Library {
 	}
 	Simulink.DataIOCC {
 	  $ObjectID		  3
-	  Version		  "1.6.0"
+	  Version		  "1.5.1"
 	  Decimation		  "1"
 	  ExternalInput		  "[t, u]"
 	  FinalStateName	  "xFinal"
@@ -252,26 +251,23 @@ Library {
 	  LoadExternalInput	  off
 	  LoadInitialState	  off
 	  SaveFinalState	  off
-	  SaveCompleteFinalSimState off
 	  SaveFormat		  "Array"
 	  SaveOutput		  on
 	  SaveState		  off
 	  SignalLogging		  on
 	  InspectSignalLogs	  off
 	  SaveTime		  on
-	  ReturnWorkspaceOutputs  off
 	  StateSaveName		  "xout"
 	  TimeSaveName		  "tout"
 	  OutputSaveName	  "yout"
 	  SignalLoggingName	  "logsout"
 	  OutputOption		  "RefineOutputTimes"
 	  OutputTimes		  "[]"
-	  ReturnWorkspaceOutputsName "out"
 	  Refine		  "1"
 	}
 	Simulink.OptimizationCC {
 	  $ObjectID		  4
-	  Version		  "1.6.0"
+	  Version		  "1.5.1"
 	  Array {
 	    Type		    "Cell"
 	    Dimension		    7
@@ -288,18 +284,13 @@ Library {
 	  BooleanDataType	  off
 	  ConditionallyExecuteInputs on
 	  InlineParams		  off
-	  UseIntDivNetSlope	  off
 	  InlineInvariantSignals  off
 	  OptimizeBlockIOStorage  on
 	  BufferReuse		  on
 	  EnhancedBackFolding	  off
-	  StrengthReduction	  off
-	  EnforceIntegerDowncast  on
 	  ExpressionFolding	  on
-	  BooleansAsBitfields	  off
 	  EnableMemcpy		  on
 	  MemcpyThreshold	  64
-	  PassReuseOutputArgsAs	  "Structure reference"
 	  ExpressionDepthLimit	  2147483647
 	  FoldNonRolledExpr	  on
 	  LocalBlockOutputs	  on
@@ -319,10 +310,11 @@ Library {
 	  BufferReusableBoundary  on
 	  SimCompilerOptimization "Off"
 	  AccelVerboseBuild	  off
+  EnforceIntegerDowncast   on
 	}
 	Simulink.DebuggingCC {
 	  $ObjectID		  5
-	  Version		  "1.6.0"
+	  Version		  "1.5.1"
 	  RTPrefix		  "error"
 	  ConsistencyChecking	  "none"
 	  ArrayBoundsChecking	  "none"
@@ -362,14 +354,11 @@ Library {
 	  ParameterUnderflowMsg	  "none"
 	  ParameterPrecisionLossMsg "warning"
 	  ParameterTunabilityLossMsg "warning"
-	  FixptConstUnderflowMsg  "none"
-	  FixptConstOverflowMsg	  "none"
-	  FixptConstPrecisionLossMsg "none"
 	  UnderSpecifiedDataTypeMsg "none"
 	  UnnecessaryDatatypeConvMsg "none"
 	  VectorMatrixConversionMsg "none"
 	  InvalidFcnCallConnMsg	  "error"
-	  FcnCallInpInsideContextMsg "Use local settings"
+	  FcnCallInpInsideContextMsg "Enable All"
 	  SignalLabelMismatchMsg  "none"
 	  UnconnectedInputMsg	  "warning"
 	  UnconnectedOutputMsg	  "warning"
@@ -389,14 +378,13 @@ Library {
 	  ModelReferenceSymbolNameMessage "warning"
 	  ModelReferenceExtraNoncontSigs "error"
 	  StateNameClashWarn	  "warning"
-	  SimStateInterfaceChecksumMismatchMsg "warning"
 	  StrictBusMsg		  "Warning"
 	  LoggingUnavailableSignals "error"
 	  BlockIODiagnostic	  "none"
 	}
 	Simulink.HardwareCC {
 	  $ObjectID		  6
-	  Version		  "1.6.0"
+	  Version		  "1.5.1"
 	  ProdBitPerChar	  8
 	  ProdBitPerShort	  16
 	  ProdBitPerInt		  32
@@ -423,7 +411,7 @@ Library {
 	}
 	Simulink.ModelReferenceCC {
 	  $ObjectID		  7
-	  Version		  "1.6.0"
+	  Version		  "1.5.1"
 	  UpdateModelReferenceTargets "IfOutOfDateOrStructuralChange"
 	  CheckModelReferenceTargetMessage "error"
 	  ModelReferenceNumInstancesAllowed "Multi"
@@ -432,21 +420,17 @@ Library {
 	}
 	Simulink.SFSimCC {
 	  $ObjectID		  8
-	  Version		  "1.6.0"
+	  Version		  "1.5.1"
 	  SFSimEnableDebug	  on
 	  SFSimOverflowDetection  on
 	  SFSimEcho		  on
-	  SimBlas		  on
-	  SimCtrlC		  on
-	  SimExtrinsic		  on
-	  SimIntegrity		  on
 	  SimUseLocalCustomCode	  off
 	  SimBuildMode		  "sf_incremental_build"
 	}
 	Simulink.RTWCC {
 	  $BackupClass		  "Simulink.RTWCC"
 	  $ObjectID		  9
-	  Version		  "1.6.0"
+	  Version		  "1.5.1"
 	  Array {
 	    Type		    "Cell"
 	    Dimension		    6
@@ -488,13 +472,12 @@ Library {
 	  GenerateTraceReportEml  off
 	  GenerateCodeInfo	  off
 	  RTWCompilerOptimization "Off"
-	  CheckMdlBeforeBuild	  "Off"
 	  Array {
 	    Type		    "Handle"
 	    Dimension		    2
 	    Simulink.CodeAppCC {
 	      $ObjectID		      10
-	      Version		      "1.6.0"
+	      Version		      "1.5.1"
 	      Array {
 		Type			"Cell"
 		Dimension		19
@@ -537,7 +520,6 @@ Library {
 	      CustomSymbolStrType     "$N$R$M"
 	      CustomSymbolStrField    "$N$M"
 	      CustomSymbolStrFcn      "$R$N$M$F"
-	      CustomSymbolStrFcnArg   "rt$I$N$M"
 	      CustomSymbolStrBlkIO    "rtb_$N$M"
 	      CustomSymbolStrTmpVar   "$N$M"
 	      CustomSymbolStrMacro    "$R$N$M"
@@ -554,10 +536,10 @@ Library {
 	    Simulink.GRTTargetCC {
 	      $BackupClass	      "Simulink.TargetCC"
 	      $ObjectID		      11
-	      Version		      "1.6.0"
+	      Version		      "1.5.1"
 	      Array {
 		Type			"Cell"
-		Dimension		17
+		Dimension		16
 		Cell			"GeneratePreprocessorConditionals"
 		Cell			"IncludeMdlTerminateFcn"
 		Cell			"CombineOutputUpdateFcns"
@@ -569,18 +551,17 @@ Library {
 		Cell			"CPPClassGenCompliant"
 		Cell			"MultiInstanceERTCode"
 		Cell			"PurelyIntegerCode"
-		Cell			"SupportNonFinite"
+		Cell			"PortableWordSizes"
 		Cell			"SupportComplex"
 		Cell			"SupportAbsoluteTime"
 		Cell			"SupportContinuousTime"
 		Cell			"SupportNonInlinedSFcns"
-		Cell			"PortableWordSizes"
 		PropName		"DisabledProps"
 	      }
 	      TargetFcnLib	      "ansi_tfl_table_tmw.mat"
 	      TargetLibSuffix	      ""
 	      TargetPreCompLibLocation ""
-	      TargetFunctionLibrary   "ANSI_C"
+	      TargetFunctionLibrary  "ANSI_C"
 	      UtilityFuncGeneration   "Auto"
 	      ERTMultiwordTypeDef     "System defined"
 	      ERTMultiwordLength      256
@@ -590,10 +571,8 @@ Library {
 	      GenerateTestInterfaces  off
 	      IsPILTarget	      off
 	      ModelReferenceCompliant on
-	      ParMdlRefBuildCompliant on
 	      CompOptLevelCompliant   on
 	      IncludeMdlTerminateFcn  on
-	      GeneratePreprocessorConditionals "Disable all"
 	      CombineOutputUpdateFcns off
 	      SuppressErrorStatus     off
 	      ERTFirstTimeCompliant   off
@@ -608,7 +587,6 @@ Library {
 	      PurelyIntegerCode	      off
 	      SupportContinuousTime   on
 	      SupportNonInlinedSFcns  on
-	      SupportVariableSizeSignals off
 	      EnableShiftOperators    on
 	      ParenthesesLevel	      "Nominal"
 	      PortableWordSizes	      off
@@ -635,7 +613,7 @@ Library {
       }
       Name		      "Configuration"
       CurrentDlgPage	      "Solver"
-      ConfigPrmDlgPosition    " [ 520, 285, 1400, 915 ] "
+      ConfigPrmDlgPosition     [ 520, 285, 1400, 915 ] 
     }
     PropName		    "ConfigurationSets"
   }
@@ -649,8 +627,7 @@ Library {
     FontWeight		    "normal"
     FontAngle		    "normal"
     ShowName		    on
-    BlockRotation	    0
-    BlockMirror		    off
+    Orientation		    "right"
   }
   AnnotationDefaults {
     HorizontalAlignment	    "center"
@@ -693,8 +670,8 @@ Library {
   }
   System {
     Name		    "casper_library"
-    Location		    [412, 138, 924, 777]
-    Open		    on
+    Location		    [211, 77, 819, 815]
+    Open		    off
     ModelBrowserVisibility  off
     ModelBrowserWidth	    212
     ScreenColor		    "white"
@@ -707,11 +684,9 @@ Library {
     ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    13
     Block {
       BlockType		      SubSystem
       Name		      "Accumulators"
-      SID		      1
       Ports		      []
       Position		      [130, 400, 182, 451]
       OpenFcn		      "casper_library_accumulators"
@@ -720,11 +695,10 @@ Library {
       RTWSystemCode	      "Auto"
       FunctionWithSeparateData off
       Opaque		      off
-      RequestExecContextInheritance off
       MaskHideContents	      off
       System {
 	Name			"Accumulators"
-	Location		[480, 85, 1016, 386]
+	Location		[378, 45, 1058, 1051]
 	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
@@ -741,8 +715,36 @@ Library {
     }
     Block {
       BlockType		      SubSystem
+      Name		      "Bus"
+      Ports		      []
+      Position		      [270, 480, 320, 530]
+      OpenFcn		      "casper_library_bus"
+      MinAlgLoopOccurrences   off
+      PropExecContextOutsideSubsystem off
+      RTWSystemCode	      "Auto"
+      FunctionWithSeparateData off
+      Opaque		      off
+      MaskHideContents	      off
+      System {
+	Name			"Bus"
+	Location		[378, 45, 1058, 1051]
+	Open			off
+	ModelBrowserVisibility	off
+	ModelBrowserWidth	200
+	ScreenColor		"white"
+	PaperOrientation	"landscape"
+	PaperPositionMode	"auto"
+	PaperType		"A4"
+	PaperUnits		"centimeters"
+	TiledPaperMargins	[1.270000, 1.270000, 1.270000, 1.270000]
+	TiledPageScale		1
+	ShowPageBoundaries	off
+	ZoomFactor		"100"
+      }
+    }
+    Block {
+      BlockType		      SubSystem
       Name		      "Communications"
-      SID		      2
       Ports		      []
       Position		      [55, 480, 105, 530]
       OpenFcn		      "casper_library_communications"
@@ -751,11 +753,10 @@ Library {
       RTWSystemCode	      "Auto"
       FunctionWithSeparateData off
       Opaque		      off
-      RequestExecContextInheritance off
       MaskHideContents	      off
       System {
 	Name			"Communications"
-	Location		[480, 85, 1016, 386]
+	Location		[378, 45, 1058, 1051]
 	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
@@ -773,7 +774,6 @@ Library {
     Block {
       BlockType		      SubSystem
       Name		      "Correlator"
-      SID		      3
       Ports		      []
       Position		      [55, 327, 106, 374]
       OpenFcn		      "casper_library_correlator"
@@ -782,11 +782,10 @@ Library {
       RTWSystemCode	      "Auto"
       FunctionWithSeparateData off
       Opaque		      off
-      RequestExecContextInheritance off
       MaskHideContents	      off
       System {
 	Name			"Correlator"
-	Location		[480, 85, 1016, 386]
+	Location		[378, 45, 1058, 1051]
 	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
@@ -804,7 +803,6 @@ Library {
     Block {
       BlockType		      SubSystem
       Name		      "Delays"
-      SID		      4
       Ports		      []
       Position		      [130, 325, 180, 375]
       OpenFcn		      "casper_library_delays"
@@ -813,11 +811,10 @@ Library {
       RTWSystemCode	      "Auto"
       FunctionWithSeparateData off
       Opaque		      off
-      RequestExecContextInheritance off
       MaskHideContents	      off
       System {
 	Name			"Delays"
-	Location		[480, 85, 1016, 386]
+	Location		[378, 45, 1058, 1051]
 	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
@@ -835,7 +832,6 @@ Library {
     Block {
       BlockType		      SubSystem
       Name		      "Downconverter"
-      SID		      5
       Ports		      []
       Position		      [55, 400, 107, 451]
       OpenFcn		      "casper_library_downconverter"
@@ -844,11 +840,10 @@ Library {
       RTWSystemCode	      "Auto"
       FunctionWithSeparateData off
       Opaque		      off
-      RequestExecContextInheritance off
       MaskHideContents	      off
       System {
 	Name			"Downconverter"
-	Location		[480, 85, 1016, 386]
+	Location		[378, 45, 1058, 1051]
 	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
@@ -866,7 +861,6 @@ Library {
     Block {
       BlockType		      SubSystem
       Name		      "FFTs"
-      SID		      6
       Ports		      []
       Position		      [270, 400, 320, 450]
       OpenFcn		      "casper_library_ffts"
@@ -875,11 +869,10 @@ Library {
       RTWSystemCode	      "Auto"
       FunctionWithSeparateData off
       Opaque		      off
-      RequestExecContextInheritance off
       MaskHideContents	      off
       System {
 	Name			"FFTs"
-	Location		[480, 85, 1016, 386]
+	Location		[378, 45, 1058, 1051]
 	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
@@ -897,7 +890,6 @@ Library {
     Block {
       BlockType		      SubSystem
       Name		      "Flow_Control"
-      SID		      7
       Ports		      []
       Position		      [200, 479, 255, 531]
       OpenFcn		      "casper_library_flow_control"
@@ -906,11 +898,10 @@ Library {
       RTWSystemCode	      "Auto"
       FunctionWithSeparateData off
       Opaque		      off
-      RequestExecContextInheritance off
       MaskHideContents	      off
       System {
 	Name			"Flow_Control"
-	Location		[480, 85, 1016, 386]
+	Location		[378, 45, 1058, 1051]
 	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
@@ -928,7 +919,6 @@ Library {
     Block {
       BlockType		      SubSystem
       Name		      "Misc"
-      SID		      8
       Ports		      []
       Position		      [200, 325, 250, 375]
       OpenFcn		      "casper_library_misc"
@@ -937,11 +927,10 @@ Library {
       RTWSystemCode	      "Auto"
       FunctionWithSeparateData off
       Opaque		      off
-      RequestExecContextInheritance off
       MaskHideContents	      off
       System {
 	Name			"Misc"
-	Location		[480, 85, 1016, 386]
+	Location		[378, 45, 1058, 1051]
 	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
@@ -959,7 +948,6 @@ Library {
     Block {
       BlockType		      SubSystem
       Name		      "Multipliers"
-      SID		      9
       Ports		      []
       Position		      [200, 400, 250, 450]
       OpenFcn		      "casper_library_multipliers"
@@ -968,11 +956,10 @@ Library {
       RTWSystemCode	      "Auto"
       FunctionWithSeparateData off
       Opaque		      off
-      RequestExecContextInheritance off
       MaskHideContents	      off
       System {
 	Name			"Multipliers"
-	Location		[480, 85, 1016, 386]
+	Location		[378, 45, 1058, 1051]
 	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
@@ -990,7 +977,6 @@ Library {
     Block {
       BlockType		      SubSystem
       Name		      "PFBs"
-      SID		      10
       Ports		      []
       Position		      [340, 400, 390, 450]
       OpenFcn		      "casper_library_pfbs"
@@ -999,11 +985,10 @@ Library {
       RTWSystemCode	      "Auto"
       FunctionWithSeparateData off
       Opaque		      off
-      RequestExecContextInheritance off
       MaskHideContents	      off
       System {
 	Name			"PFBs"
-	Location		[480, 85, 1016, 386]
+	Location		[378, 45, 1058, 1051]
 	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
@@ -1021,7 +1006,6 @@ Library {
     Block {
       BlockType		      SubSystem
       Name		      "Reorder"
-      SID		      11
       Ports		      []
       Position		      [340, 325, 390, 375]
       OpenFcn		      "casper_library_reorder"
@@ -1030,11 +1014,10 @@ Library {
       RTWSystemCode	      "Auto"
       FunctionWithSeparateData off
       Opaque		      off
-      RequestExecContextInheritance off
       MaskHideContents	      off
       System {
 	Name			"Reorder"
-	Location		[480, 85, 1016, 386]
+	Location		[378, 45, 1058, 1051]
 	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
@@ -1052,7 +1035,6 @@ Library {
     Block {
       BlockType		      SubSystem
       Name		      "Scopes"
-      SID		      12
       Ports		      []
       Position		      [270, 325, 320, 375]
       OpenFcn		      "casper_library_scopes"
@@ -1061,11 +1043,10 @@ Library {
       RTWSystemCode	      "Auto"
       FunctionWithSeparateData off
       Opaque		      off
-      RequestExecContextInheritance off
       MaskHideContents	      off
       System {
 	Name			"Scopes"
-	Location		[480, 85, 1016, 386]
+	Location		[378, 45, 1058, 1051]
 	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
@@ -1083,7 +1064,6 @@ Library {
     Block {
       BlockType		      SubSystem
       Name		      "Sources"
-      SID		      13
       Ports		      []
       Position		      [130, 480, 180, 530]
       OpenFcn		      "casper_library_sources"
@@ -1092,11 +1072,10 @@ Library {
       RTWSystemCode	      "Auto"
       FunctionWithSeparateData off
       Opaque		      off
-      RequestExecContextInheritance off
       MaskHideContents	      off
       System {
 	Name			"Sources"
-	Location		[1010, 236, 1259, 549]
+	Location		[908, 45, 1301, 1063]
 	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200

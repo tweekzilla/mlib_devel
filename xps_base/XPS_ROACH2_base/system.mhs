@@ -280,6 +280,10 @@
 #IF# strcmp(get(b,'type'),'xps_katadc') && strcmp(get(b,'hw_adc'),'adc1')# PORT adc1_psdone = adc1_psdone
 #IF# strcmp(get(b,'type'),'xps_katadc') && strcmp(get(b,'hw_adc'),'adc1')# PORT adc1_clk = adc1_clk
 #IF# strcmp(get(b,'type'),'xps_katadc')                                  #END
+
+
+
+
 #IF# (strcmp(get(b,'type'),'xps_adc5g')) #### added 2011-05-05 kim.guzzino (copy of Homin's with name change)
 #IF# (strcmp(get(b,'type'),'xps_adc5g')) #### changed 2011-08-04 rurik to adc5g
 #IF# (strcmp(get(b,'type'),'xps_adc5g')) && get(b,'use_adc0')##
@@ -334,7 +338,7 @@
 #IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc0')# PORT adc0_modepin          = adc0_modepin
 #IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc0')# PORT adc0_reset            = adc0_reset
 #IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc0')# PORT adc0_dcm_reset        = adc0_dcm_reset
-#IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc0')# PORT adc0_dcm_locked       = adc0_dcm_locked
+#IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc0')# PORT adc0_dcm_locked       = adc0_clk_lock
 #IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc0')# PORT adc0_fifo_full_cnt    = adc0_fifo_full_cnt
 #IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc0')# PORT adc0_fifo_empty_cnt   = adc0_fifo_empty_cnt
 #IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc0')# PORT adc0_psclk            = adc0_psclk
@@ -342,6 +346,11 @@
 #IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc0')# PORT adc0_psincdec         = adc0_psincdec
 #IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc0')# PORT adc0_psdone           = adc0_psdone
 #IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc0')# PORT adc0_clk              = adc0_clk
+#IF# (strcmp(get(b,'type'),'xps_adc5g'))  # #
+#IF# (strcmp(get(b,'type'),'xps_adc5g'))  # # IDELAY control signals for adc0
+#IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc0')# PORT adc0_tap_rst          = adc0_tap_rst
+#IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc0')# PORT adc0_datain_pin       = adc0_datain_pin
+#IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc0')# PORT adc0_datain_tap       = adc0_datain_tap
 #IF# (strcmp(get(b,'type'),'xps_adc5g'))  # #
 #IF# (strcmp(get(b,'type'),'xps_adc5g'))  # # control signals for adc1
 #IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc1')# PORT adc1_adc3wire_clk     = adc1_adc3wire_clk
@@ -351,7 +360,7 @@
 #IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc1')# PORT adc1_modepin          = adc1_modepin
 #IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc1')# PORT adc1_reset            = adc1_reset  
 #IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc1')# PORT adc1_dcm_reset        = adc1_dcm_reset
-#IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc1')# PORT adc1_dcm_locked       = adc1_dcm_locked
+#IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc1')# PORT adc1_dcm_locked       = adc1_clk_lock
 #IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc1')# PORT adc1_fifo_full_cnt    = adc1_fifo_full_cnt
 #IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc1')# PORT adc1_fifo_empty_cnt   = adc1_fifo_empty_cnt
 #IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc1')# PORT adc1_psclk            = adc1_psclk
@@ -360,7 +369,67 @@
 #IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc1')# PORT adc1_psdone           = adc1_psdone
 #IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc1')# PORT adc1_clk              = adc1_clk
 #IF# (strcmp(get(b,'type'),'xps_adc5g'))  # #
+#IF# (strcmp(get(b,'type'),'xps_adc5g'))  # # IDELAY control signals for adc1
+#IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc0')# PORT adc1_tap_rst          = adc1_tap_rst
+#IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc0')# PORT adc1_datain_pin       = adc1_datain_pin
+#IF# (strcmp(get(b,'type'),'xps_adc5g'))  && get(b,'use_adc0')# PORT adc1_datain_tap       = adc1_datain_tap
+#IF# (strcmp(get(b,'type'),'xps_adc5g'))  # #
 #IF# (strcmp(get(b,'type'),'xps_adc5g'))  #END
+
+
+#IF# (strcmp(get(b,'type'),'xps_adc16')) #### ADC16 Controller
+#IF# (strcmp(get(b,'type'),'xps_adc16')) ## External ports for 3-wire interface to adc0
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # PORT adc0_adc3wire_sclk     = adc0_adc3wire_sclk, DIR = O
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # PORT adc0_adc3wire_sdata    = adc0_adc3wire_sdata, DIR = O
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # PORT adc0_adc3wire_csn1     = adc0_adc3wire_csn1, DIR = O
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # PORT adc0_adc3wire_csn2     = adc0_adc3wire_csn2, DIR = O
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # PORT adc0_adc3wire_csn3     = adc0_adc3wire_csn3, DIR = O
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # PORT adc0_adc3wire_csn4     = adc0_adc3wire_csn4, DIR = O
+#IF# (strcmp(get(b,'type'),'xps_adc16')) && get(b,'num_units') > 4 # PORT adc1_adc3wire_sclk     = adc1_adc3wire_sclk, DIR = O
+#IF# (strcmp(get(b,'type'),'xps_adc16')) && get(b,'num_units') > 4 # PORT adc1_adc3wire_sdata    = adc1_adc3wire_sdata, DIR = O
+#IF# (strcmp(get(b,'type'),'xps_adc16')) && get(b,'num_units') > 4 # PORT adc1_adc3wire_csn1     = adc1_adc3wire_csn1, DIR = O
+#IF# (strcmp(get(b,'type'),'xps_adc16')) && get(b,'num_units') > 4 # PORT adc1_adc3wire_csn2     = adc1_adc3wire_csn2, DIR = O
+#IF# (strcmp(get(b,'type'),'xps_adc16')) && get(b,'num_units') > 4 # PORT adc1_adc3wire_csn3     = adc1_adc3wire_csn3, DIR = O
+#IF# (strcmp(get(b,'type'),'xps_adc16')) && get(b,'num_units') > 4 # PORT adc1_adc3wire_csn4     = adc1_adc3wire_csn4, DIR = O
+#IF# (strcmp(get(b,'type'),'xps_adc16')) ##
+#IF# (strcmp(get(b,'type'),'xps_adc16')) #BEGIN opb_adc16_controller
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # #
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # PARAMETER INSTANCE     = opb_adc16_controller_0
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # PARAMETER HW_VER       = 1.00.a
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # PARAMETER C_BASEADDR   = 0x00020000
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # PARAMETER C_HIGHADDR   = 0x00020fff
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # BUS_INTERFACE SOPB = opb0
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # #
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # # misc ports
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # PORT OPB_Clk = epb_clk
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # #
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # # Control signals for 3-wire interface to adc0
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # PORT adc0_adc3wire_sclk     = adc0_adc3wire_sclk
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # PORT adc0_adc3wire_sdata    = adc0_adc3wire_sdata
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # PORT adc0_adc3wire_csn1     = adc0_adc3wire_csn1
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # PORT adc0_adc3wire_csn2     = adc0_adc3wire_csn2
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # PORT adc0_adc3wire_csn3     = adc0_adc3wire_csn3
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # PORT adc0_adc3wire_csn4     = adc0_adc3wire_csn4
+#IF# (strcmp(get(b,'type'),'xps_adc16')) && get(b,'num_units') > 4 # PORT adc1_adc3wire_sclk     = adc1_adc3wire_sclk
+#IF# (strcmp(get(b,'type'),'xps_adc16')) && get(b,'num_units') > 4 # PORT adc1_adc3wire_sdata    = adc1_adc3wire_sdata
+#IF# (strcmp(get(b,'type'),'xps_adc16')) && get(b,'num_units') > 4 # PORT adc1_adc3wire_csn1     = adc1_adc3wire_csn1
+#IF# (strcmp(get(b,'type'),'xps_adc16')) && get(b,'num_units') > 4 # PORT adc1_adc3wire_csn2     = adc1_adc3wire_csn2
+#IF# (strcmp(get(b,'type'),'xps_adc16')) && get(b,'num_units') > 4 # PORT adc1_adc3wire_csn3     = adc1_adc3wire_csn3
+#IF# (strcmp(get(b,'type'),'xps_adc16')) && get(b,'num_units') > 4 # PORT adc1_adc3wire_csn4     = adc1_adc3wire_csn4
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # #
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # # Control signals to/from adc16_interface
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # PORT adc16_reset            = adc16_reset
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # PORT adc16_iserdes_bitslip  = adc16_iserdes_bitslip
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # PORT adc16_delay_rst        = adc16_delay_rst
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # PORT adc16_delay_tap        = adc16_delay_tap
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # PORT adc16_snap_req         = adc16_snap_req
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # PORT adc16_locked           = adc16_locked
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # PORT adc16_roach2_rev       = adc16_roach2_rev
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # PORT adc16_zdok_rev         = adc16_zdok_rev
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # PORT adc16_num_units        = adc16_num_units
+#IF# (strcmp(get(b,'type'),'xps_adc16')) # #
+#IF# (strcmp(get(b,'type'),'xps_adc16')) #END
+
 
 BEGIN roach_infrastructure
  PARAMETER INSTANCE = infrastructure_inst
@@ -397,10 +466,12 @@ BEGIN roach_infrastructure
  PORT aux_clk2x90   = aux_clk2x90
  PORT aux_clk2x180  = aux_clk2x180
  PORT aux_clk2x270  = aux_clk2x270
+ PORT aux_clk_lock  = aux_clk_lock
  PORT epb_clk = epb_clk
  PORT idelay_rst = power_on_rst
  PORT idelay_rdy = idelay_rdy
  PORT op_power_on_rst  = power_on_rst
+ PORT clk_100 = clk_100
 END
 
 BEGIN reset_block
