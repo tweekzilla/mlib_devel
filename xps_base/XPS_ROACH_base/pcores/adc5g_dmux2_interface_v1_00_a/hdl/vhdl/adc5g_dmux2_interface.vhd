@@ -21,8 +21,8 @@ use ieee.numeric_std.all;
 library unisim;
 use unisim.vcomponents.all;
 
-library adc5g_dmux1_interface_v1_00_a;
-use adc5g_dmux1_interface_v1_00_a.all;
+--library adc5g_dmux1_interface_v1_00_a;
+--use adc5g_dmux1_interface_v1_00_a.all;
 
 --------------------------------------------
 --    ENTITY section
@@ -31,12 +31,12 @@ use adc5g_dmux1_interface_v1_00_a.all;
 entity adc5g_dmux2_interface is
   generic (  
     adc_bit_width   : integer :=8;
-    clkin_period    : real    :=2.0;  -- clock in period (ns)
+    clkin_period    : real    :=3.2;  -- clock in period (ns)
     mode            : integer :=0;    -- 1-channel mode
     pll_m         : integer := 2;       -- PLL multiplier value
     pll_d         : integer := 1;       -- PLL divide value
-    pll_o0        : integer := 1;       -- PLL first clock divide
-    pll_o1        : integer := 1        -- PLL second clock divide
+    pll_o0        : integer := 2;       -- PLL first clock divide
+    pll_o1        : integer := 2        -- PLL second clock divide
     );
   port (
     adc_clk_p_i     : in std_logic;
@@ -114,7 +114,9 @@ architecture behavioral of adc5g_dmux2_interface is
   signal dcm_clkfbout : std_logic;
   signal dcm_locked   : std_logic;
   signal dcm_rst      : std_logic;
-  
+  signal dcm_clk2x      : std_logic;
+  signal dcm_clk : std_logic;
+
   -- IDDR signals
   signal iddr_clk      : std_logic;
   signal iddr_clkdiv : std_logic;
@@ -168,6 +170,8 @@ architecture behavioral of adc5g_dmux2_interface is
   signal data3a_pre    : std_logic_vector(adc_bit_width-1 downto 0);
   signal data3b_pre    : std_logic_vector(adc_bit_width-1 downto 0);
 
+  --attribute CLKIN_DIVIDE_BY_2 of DCM0: label is True;
+
   -- Gray code to binary converter
   component gc2bin
     generic (
@@ -197,10 +201,10 @@ architecture behavioral of adc5g_dmux2_interface is
 begin
 
   -- Synchronize resets for all components 
-  IDDR_R : FD port map (C => ctrl_clk_in, D => ctrl_reset, Q =>    iddr_rst);
-  DCM_R : FD port map (C => ctrl_clk_in, D => ctrl_reset, Q =>    dcm_rst);
-  FIFO_R : FD port map (C => ctrl_clk_in, D => ctrl_reset, Q =>    fifo_rst);
-  ADC_R  : FD port map (C => ctrl_clk_in, D => ctrl_reset, Q => adc_reset_o);
+  IDDR_R : FD port map (C => iddr_clk, D => ctrl_reset, Q =>    iddr_rst);
+  DCM_R : FD port map (C => dcm_clk , D => ctrl_reset, Q =>    dcm_rst);
+  FIFO_R : FD port map (C => iddr_clk, D => ctrl_reset, Q =>    fifo_rst);
+  ADC_R  : FD port map (C => adc_clk, D => ctrl_reset, Q => adc_reset_o);
 
 
   chan1_mode: if (mode=0) generate
@@ -276,12 +280,16 @@ begin
       DLL_FREQUENCY_MODE => "HIGH",
       DFS_FREQUENCY_MODE => "HIGH",
       CLKOUT_PHASE_SHIFT => "VARIABLE_POSITIVE",
+      CLKIN_DIVIDE_BY_2 => TRUE,
+      CLKFX_MULTIPLY => 2,
+      CLKFX_DIVIDE => 2,
       CLKIN_PERIOD       => clkin_period
       )
     port map (
       CLK0     => dcm_clkfbout,
-      CLK90    => pll_clkin,
-      CLKIN    => adc_clk,
+      --CLK90    => pll_clkin,
+      CLK2X    => dcm_clk2x,
+      CLKIN    => dcm_clk,
       CLKFB    => dcm_clkfbin,
       DADDR    => "0000000",
       DCLK     => '0',
@@ -299,6 +307,7 @@ begin
       );
 
   CBUF2a : BUFG port map (i => dcm_clkfbout, o => dcm_clkfbin);
+  CBUF2c : BUFG port map (i => dcm_clk2x, o => iddr_clkdiv);
 
   PLL : PLL_BASE
     generic map (
@@ -341,7 +350,7 @@ begin
 
 
   CBUF2b : BUFG port map (i => pll_clkout0, o => iddr_clk);
-  CBUF2c : BUFG port map (i => pll_clkout1, o => iddr_clkdiv);
+  CBUF22g : BUFG port map (i => pll_clkout1, o => dcm_clk);
   CBUF2d : BUFG port map (i => pll_clkout2, o => ctrl_clk90_out);
   CBUF2e : BUFG port map (i => pll_clkout3, o => ctrl_clk180_out);
   CBUF2f : BUFG port map (i => pll_clkout4, o => ctrl_clk270_out);
@@ -393,7 +402,7 @@ begin
     -----------------------------------------------------------------------------
     -- Capture the data using IDDR
     -----------------------------------------------------------------------------
-    iddr0_rbuf: FD port map (C => ctrl_clk_in, D => iddr_rst, Q => iddr0_rst(i));
+    iddr0_rbuf: FD port map (C => iddr_clk, D => iddr_rst, Q => iddr0_rst(i));
     iddr0: IDDR
       generic map (
         DDR_CLK_EDGE => "SAME_EDGE_PIPELINED",
@@ -409,7 +418,7 @@ begin
         S  => '0'
         );
 
-    iddr1_rbuf: FD port map (C => ctrl_clk_in, D => iddr_rst, Q => iddr1_rst(i));
+    iddr1_rbuf: FD port map (C => iddr_clk, D => iddr_rst, Q => iddr1_rst(i));
     iddr1: IDDR
       generic map (
         DDR_CLK_EDGE => "SAME_EDGE_PIPELINED",
@@ -425,7 +434,7 @@ begin
         S  => '0'
         );
 
-    iddr2_rbuf: FD port map (C => ctrl_clk_in, D => iddr_rst, Q => iddr2_rst(i));
+    iddr2_rbuf: FD port map (C => iddr_clk, D => iddr_rst, Q => iddr2_rst(i));
     iddr2: IDDR
       generic map (
         DDR_CLK_EDGE => "SAME_EDGE_PIPELINED",
@@ -441,7 +450,7 @@ begin
         S  => '0'
         );
 
-    iddr3_rbuf: FD port map (C => ctrl_clk_in, D => iddr_rst, Q => iddr3_rst(i));
+    iddr3_rbuf: FD port map (C => iddr_clk, D => iddr_rst, Q => iddr3_rst(i));
     iddr3: IDDR
       generic map (
         DDR_CLK_EDGE => "SAME_EDGE_PIPELINED",
