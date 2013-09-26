@@ -148,6 +148,8 @@ architecture behavioral of adc5g_dmux2_interface is
   signal data0b        : std_logic_vector(adc_bit_width-1 downto 0);
   signal data0a_pre    : std_logic_vector(adc_bit_width-1 downto 0);
   signal data0b_pre    : std_logic_vector(adc_bit_width-1 downto 0);
+  signal data0a_sim     : std_logic_vector(adc_bit_width-1 downto 0);
+  signal data0b_sim     : std_logic_vector(adc_bit_width-1 downto 0);
 
   -- second core, "C"
   signal data1         : std_logic_vector(adc_bit_width-1 downto 0);
@@ -155,13 +157,17 @@ architecture behavioral of adc5g_dmux2_interface is
   signal data1b        : std_logic_vector(adc_bit_width-1 downto 0);
   signal data1a_pre    : std_logic_vector(adc_bit_width-1 downto 0);
   signal data1b_pre    : std_logic_vector(adc_bit_width-1 downto 0);
-  
+  signal data1a_sim     : std_logic_vector(adc_bit_width-1 downto 0);
+  signal data1b_sim     : std_logic_vector(adc_bit_width-1 downto 0);
+
   -- third core, "B"   
   signal data2         : std_logic_vector(adc_bit_width-1 downto 0);
   signal data2a        : std_logic_vector(adc_bit_width-1 downto 0);
   signal data2b        : std_logic_vector(adc_bit_width-1 downto 0);
   signal data2a_pre    : std_logic_vector(adc_bit_width-1 downto 0);
   signal data2b_pre    : std_logic_vector(adc_bit_width-1 downto 0);
+  signal data2a_sim     : std_logic_vector(adc_bit_width-1 downto 0);
+  signal data2b_sim     : std_logic_vector(adc_bit_width-1 downto 0);
 
   -- fourth core, "D"
   signal data3         : std_logic_vector(adc_bit_width-1 downto 0);
@@ -169,9 +175,10 @@ architecture behavioral of adc5g_dmux2_interface is
   signal data3b        : std_logic_vector(adc_bit_width-1 downto 0);
   signal data3a_pre    : std_logic_vector(adc_bit_width-1 downto 0);
   signal data3b_pre    : std_logic_vector(adc_bit_width-1 downto 0);
+  signal data3a_sim     : std_logic_vector(adc_bit_width-1 downto 0);
+  signal data3b_sim     : std_logic_vector(adc_bit_width-1 downto 0);
 
-  --attribute CLKIN_DIVIDE_BY_2 of DCM0: label is True;
-
+  
   -- Gray code to binary converter
   component gc2bin
     generic (
@@ -200,14 +207,20 @@ architecture behavioral of adc5g_dmux2_interface is
   
 begin
 
+ 
+
   -- Synchronize resets for all components 
-  IDDR_R : FD port map (C => iddr_clk, D => ctrl_reset, Q =>    iddr_rst);
-  DCM_R : FD port map (C => dcm_clk , D => ctrl_reset, Q =>    dcm_rst);
-  FIFO_R : FD port map (C => iddr_clk, D => ctrl_reset, Q =>    fifo_rst);
-  ADC_R  : FD port map (C => adc_clk, D => ctrl_reset, Q => adc_reset_o);
+--  IDDR_R : FD port map (C => adc_clk, D => ctrl_reset, Q =>    iddr_rst);
+--  DCM_R : FD port map (C => adc_clk , D => ctrl_reset, Q =>    dcm_rst);
+--  FIFO_R : FD port map (C => adc_clk, D => ctrl_reset, Q =>    fifo_rst);
+--  ADC_R  : FD port map (C => adc_clk, D => ctrl_reset, Q => adc_reset_o);
+  adc_reset_o <= '0';
+  dcm_rst <= ctrl_reset;
+  iddr_rst <= ctrl_reset;
+  fifo_rst <= not dcm_locked;
+  
 
-
-  chan1_mode: if (mode=0) generate
+  --chan1_mode: if (mode=0) generate
     GC2BI0 : gc2bin port map (gc  => data0a(adc_bit_width/2-1 downto 0), bin => user_data_i0);
     GC2BI1 : gc2bin port map (gc  => data1a(adc_bit_width/2-1 downto 0), bin => user_data_i1);
     GC2BI2 : gc2bin port map (gc  => data2a(adc_bit_width/2-1 downto 0), bin => user_data_i2);
@@ -224,9 +237,9 @@ begin
     GC2BQ4 : gc2bin port map (gc  => data0b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q4);
     GC2BQ5 : gc2bin port map (gc  => data1b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q5);
     GC2BQ6 : gc2bin port map (gc  => data2b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q6);
-    GC2BQ7 : gc2bin port map (gc  => data3b(adc_bit_width-1 downto adc_bit_width/2), Bin => user_data_q7);
-  end generate chan1_mode;
-
+    GC2BQ7 : gc2bin port map (gc  => data3b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q7);    
+  --end generate chan1_mode;
+  
   chan2_mode: if (mode=1) generate
     GC2BI0 : gc2bin port map (gc  => data0a(adc_bit_width/2-1 downto 0), bin => user_data_i0);
     GC2BI2 : gc2bin port map (gc  => data2a(adc_bit_width/2-1 downto 0), bin => user_data_i1);
@@ -245,7 +258,7 @@ begin
     GC2BQ1 : gc2bin port map (gc  => data1b(adc_bit_width/2-1 downto 0), bin => user_data_q4);
     GC2BQ3 : gc2bin port map (gc  => data3b(adc_bit_width/2-1 downto 0), bin => user_data_q5);
     GC2BQ5 : gc2bin port map (gc  => data1b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q6);
-    GC2BQ7 : gc2bin port map (gc  => data3b(adc_bit_width-1 downto adc_bit_width/2), Bin => user_data_q7);
+    GC2BQ7 : gc2bin port map (gc  => data3b(adc_bit_width-1 downto adc_bit_width/2), bin => user_data_q7);
   end generate chan2_mode;
 
 
@@ -280,16 +293,16 @@ begin
       DLL_FREQUENCY_MODE => "HIGH",
       DFS_FREQUENCY_MODE => "HIGH",
       CLKOUT_PHASE_SHIFT => "VARIABLE_POSITIVE",
-      CLKIN_DIVIDE_BY_2 => TRUE,
-      CLKFX_MULTIPLY => 2,
-      CLKFX_DIVIDE => 2,
+      --CLKIN_DIVIDE_BY_2 => TRUE,
+      --CLKFX_MULTIPLY => 2,
+      --CLKFX_DIVIDE => 1,
       CLKIN_PERIOD       => clkin_period
       )
     port map (
       CLK0     => dcm_clkfbout,
-      --CLK90    => pll_clkin,
-      CLK2X    => dcm_clk2x,
-      CLKIN    => dcm_clk,
+      CLKFX    => open,
+      CLK2X    => open,
+      CLKIN    => adc_clk,
       CLKFB    => dcm_clkfbin,
       DADDR    => "0000000",
       DCLK     => '0',
@@ -307,7 +320,6 @@ begin
       );
 
   CBUF2a : BUFG port map (i => dcm_clkfbout, o => dcm_clkfbin);
-  CBUF2c : BUFG port map (i => dcm_clk2x, o => iddr_clkdiv);
 
   PLL : PLL_BASE
     generic map (
@@ -323,7 +335,7 @@ begin
       CLKOUT3_DIVIDE     => pll_o1,
       CLKOUT4_DIVIDE     => pll_o1,
       CLKOUT0_PHASE      => 0.0,
-      CLKOUT1_PHASE      => 0.0,
+      CLKOUT1_PHASE      => 10.0,
       CLKOUT2_PHASE      => 90.0,
       CLKOUT3_PHASE      => 180.0,
       CLKOUT4_PHASE      => 270.0,
@@ -335,8 +347,8 @@ begin
       REF_JITTER         => 0.1
       )
     port map (
-      --CLKIN    => pll_clkin,
-      CLKIN =>  adc_clk,
+      CLKIN    => dcm_clkfbin,
+      --CLKIN =>  adc_clk,
       CLKFBIN  => pll_clkfb,
       CLKOUT0  => pll_clkout0,
       CLKOUT1  => pll_clkout1,
@@ -350,7 +362,7 @@ begin
 
 
   CBUF2b : BUFG port map (i => pll_clkout0, o => iddr_clk);
-  CBUF22g : BUFG port map (i => pll_clkout1, o => dcm_clk);
+  CBUF22g : BUFG port map (i => pll_clkout1, o => iddr_clkdiv);
   CBUF2d : BUFG port map (i => pll_clkout2, o => ctrl_clk90_out);
   CBUF2e : BUFG port map (i => pll_clkout3, o => ctrl_clk180_out);
   CBUF2f : BUFG port map (i => pll_clkout4, o => ctrl_clk270_out);
@@ -484,6 +496,22 @@ begin
       empty       => fifo_empty
       
       );
+ -- Hack to test FIFO is working
+
+
+
+        data0a_sim <= "01100000";
+        data1a_sim <= "01110001";
+        data2a_sim <= "01010011";
+        data3a_sim <= "01000010";
+     
+        data0b_sim <= "10101100";
+        data1b_sim <= "10111101";
+        data2b_sim <= "10011111";
+        data3b_sim <= "10001110";
+    
+
+
 
   -- purpose: control the FIFO read enable signal
   -- type   : sequential
