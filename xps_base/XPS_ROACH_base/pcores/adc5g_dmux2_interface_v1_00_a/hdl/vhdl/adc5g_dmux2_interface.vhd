@@ -335,7 +335,7 @@ begin
       CLKOUT3_DIVIDE     => pll_o1,
       CLKOUT4_DIVIDE     => pll_o1,
       CLKOUT0_PHASE      => 0.0,
-      CLKOUT1_PHASE      => 10.0,
+      CLKOUT1_PHASE      => 0.0,
       CLKOUT2_PHASE      => 90.0,
       CLKOUT3_PHASE      => 180.0,
       CLKOUT4_PHASE      => 270.0,
